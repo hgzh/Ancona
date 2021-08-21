@@ -535,6 +535,24 @@ class hgzWeb {
 		call_user_func_array('array_multisort', $args);
 		return array_pop($args);
 	}
+	
+	/**
+	 * encodeForURL()
+	 * Zeichenkette für Einsatz in URL vorbereiten
+	 * 
+	 * Parameter:
+	 * - $input  :  Eingabetext
+	 * - $maxlen : Maximale Länge der Rückgabe
+	 */		
+	public static function encodeForURL($input, $maxlen = 20) {
+		$search  = ['/[\.\/\\#@:\?=\%\<\>\}\{\[\]\^]/', '/\s/'];
+		$escaped = preg_replace($search, ['', '-'], strtolower($input));
+		
+		if ($maxlen != false) {
+			$escaped = substr($escaped, 0, $maxlen);
+		}
+		return $escaped;
+	}
 }
 
 ?>
