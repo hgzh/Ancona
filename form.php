@@ -24,7 +24,8 @@ class bsForm extends Html {
 		parent::__construct();
 		
 		$this->name     = $name;
-		$this->content .= $this->elem('form', ['action' => $action,
+		$this->content .= $this->elem('form', ['id'     => 'hgzform-' . $name,
+											   'action' => $action,
 											   'method' => $method,
 											   'class'  => $class
 											  ],
