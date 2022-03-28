@@ -130,7 +130,7 @@ class Html {
 	 * - class   : Klassenangaben
 	 * - style   : CSS-Style-Angaben
 	 */		
-	public function addInline($tag, $content, $class = false, $style = false) {
+	public function addInline($tag, $content = '', $class = false, $style = false) {
 		$this->content .= $this->elem($tag,
 									  ['class' => $class,
 									   'style' => $style
@@ -343,7 +343,7 @@ class Html {
 	 */
 	public function addNav($name, $entries) {
 		// Nav-Tabs öffnen
-		$this->openBlock('ul', 'nav nav-tabs sticky-top', 'z-index:999;top:3.8rem;background:white;padding-top:1em;', 'tab-' . $name, 'tabs');
+		$this->openBlock('ul', 'nav nav-tabs sticky-top bg-white pt-2', 'z-index:999;top:3.8rem;', 'tab-' . $name, 'tabs');
 
 		// einzelne Tabs darstellen
 		$i = 0;
