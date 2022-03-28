@@ -432,7 +432,7 @@ class bsForm extends Html {
 						
 			// Input einfügen
 			$text .= $this->elem('button', ['type'     => $b['type'],
-											'id'       => 'lsm-' . $this->name . '-' . ($b['name'] == false ? 'submit' : $b['name']),
+											'id'       => 'lsm-' . $this->name . '-' . ($b['name'] == false ? $b['type'] : $b['name']),
 											'name'     => $b['name'],
 											'class'    => 'btn' . (isset($b['color']) ? ' btn-' . $b['color'] : '') . (isset($b['class']) ? ' ' . $b['class'] : ''),
 											'disabled' => $b['disabled'],
