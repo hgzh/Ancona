@@ -122,7 +122,7 @@ class hgzWeb {
 		$m = new Html();
 
 		// Nav-Element
-		$m->addHTML('<nav id="hgzweb-navbar" class="navbar navbar-expand-lg ' . $navClass . '"');
+		$m->addHTML('<nav id="hgzweb-navbar" class="navbar navbar-expand-lg hgzweb-owncolor ' . $navClass . '"');
 		if (UserConfig::$var['navbar-color'] !== false) { 
 			$m->addHTML(' style="background-color:' . UserConfig::$var['navbar-color'] . '"');
 		}
@@ -320,8 +320,8 @@ class hgzWeb {
 	 */
 	private function buildResourceLoader() {
 		// CSS: Bootstrap
-		$this->loadCSS('https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css',
-					   'sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x');
+		$this->loadCSS('https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-dark.min.css',
+					   'sha384-pZAJcuaxKZEGkzXV5bYqUcSwBfMZPdQS/+JXdYOu9ScyZJMnGHD5Xi6HVHfZuULH');
 				
 		// JS: jQuery
 		$this->loadJS('https://code.jquery.com/jquery-3.5.1.slim.min.js',
@@ -332,8 +332,8 @@ class hgzWeb {
 					  'sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU');
 
 		// JS: Bootstrap
-		$this->loadJS('https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js',
-					  'sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4');
+		$this->loadJS('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js',
+					  'sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p');
 		
 		// benutzerdefinierte Resourcen laden
 		$this->getCustomResourceLoad();
@@ -372,6 +372,13 @@ class hgzWeb {
 		$headHtml .= Html::elem('meta',
 								['name'    => 'viewport',
 								 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no'],
+								'',
+								false);
+		
+		// Color-Scheme
+		$headHtml .= Html::elem('meta',
+								['name'    => 'color-scheme',
+								 'content' => 'light dark'],
 								'',
 								false);
 
@@ -450,7 +457,7 @@ class hgzWeb {
 		
 		// Fußbereich
 		$m->addHTML(Html::elem('div',
-							   ['class' => 'row bg-light mt-4 pt-3',
+							   ['class' => 'row bg-light mt-4 pt-3 hgzweb-owncolor',
 								'id'    => 'hgzweb-footer'],
 							   $this->getFooterText()));
 		
@@ -544,9 +551,11 @@ class hgzWeb {
 	 * - $input  :  Eingabetext
 	 * - $maxlen : Maximale Länge der Rückgabe
 	 */		
-	public static function encodeForURL($input, $maxlen = 20) {
-		$search  = ['/[\.\/\\#@:\?=\%\<\>\}\{\[\]\^]/', '/\s/'];
-		$escaped = preg_replace($search, ['', '-'], strtolower($input));
+	public static function encodeForURL($input, $maxlen = 40) {
+		$input   = str_replace(['Ä', 'Ö', 'Ü'], ['ä', 'ö', 'ü'], $input);
+		$search  = ['/[\.\/\\#"„“”‚‘,@:\?=\%\<\>\}\{\[\]\^]/', '/\s/', '/ä/', '/ö/', '/ü/', '/ß/'];
+		$escaped = preg_replace($search, ['', '-', 'a', 'o', 'u', 'ss'], $input);
+		$escaped = strtolower($escaped);
 		
 		if ($maxlen != false) {
 			$escaped = substr($escaped, 0, $maxlen);
