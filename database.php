@@ -97,6 +97,55 @@ class Database extends mysqli {
 		// Statement-Objekt zurückgeben
 		return $query;
 	}
+	
+	/** 
+	 * fetchResult()
+	 * bezieht Ergebnisse von mysqli_stmt und mysqli_result in der gleichen Funktion
+	 *
+	 * Parameter:
+	 * - query : mysqli result/statement
+	 */
+	public static function fetchResult($query) {   
+		$array = [];
+
+		if ($query instanceof mysqli_stmt) {
+			// mysqli_stmt
+
+			// Statement-Metadaten
+			$query->store_result();
+			$variables = [];
+			$data = [];
+			$meta = $query->result_metadata();
+
+			// SQL-Feldnamen
+			while ($field = $meta->fetch_field()) {
+				$variables[] = &$data[$field->name];
+			}
+
+			// Ergebnisse an Feldnamen binden
+			call_user_func_array([$query, 'bind_result'], $variables);
+			
+			// Daten beziehen
+			$i = 0;
+			while ($query->fetch()) {
+				$array[$i] = [];
+				foreach ($data as $k => $v)
+					$array[$i][$k] = $v;
+				$i++;
+			}
+			
+		} elseif ($query instanceof mysqli_result) {
+			// mysqli_result
+
+			// Alle Zeilen beziehen
+			while ($row = $query->fetch_assoc()) {
+				$array[] = $row;
+			}
+		}
+
+		// Rückgabe
+		return $array;
+	}	
 
 	/**
 	 * decodeDate()
@@ -145,54 +194,32 @@ class Database extends mysqli {
 		
 		return $val;
 	}
-
-	/** 
-	 * fetchResult()
-	 * bezieht Ergebnisse von mysqli_stmt und mysqli_result in der gleichen Funktion
+	
+	/**
+	 * encodeTime()
+	 * formatiert Zeitangaben im Format 00:00,00 in Hundertstelsekunden für die Datenbank
 	 *
-	 * Parameter:
-	 * - query : mysqli result/statement
-	 */
-	public static function fetchResult($query) {   
-		$array = [];
-
-		if ($query instanceof mysqli_stmt) {
-			// mysqli_stmt
-
-			// Statement-Metadaten
-			$query->store_result();
-			$variables = [];
-			$data = [];
-			$meta = $query->result_metadata();
-
-			// SQL-Feldnamen
-			while ($field = $meta->fetch_field()) {
-				$variables[] = &$data[$field->name];
-			}
-
-			// Ergebnisse an Feldnamen binden
-			call_user_func_array([$query, 'bind_result'], $variables);
-			
-			// Daten beziehen
-			$i = 0;
-			while ($query->fetch()) {
-				$array[$i] = [];
-				foreach ($data as $k => $v)
-					$array[$i][$k] = $v;
-				$i++;
-			}
-			
-		} elseif ($query instanceof mysqli_result) {
-			// mysqli_result
-
-			// Alle Zeilen beziehen
-			while ($row = $query->fetch_assoc()) {
-				$array[] = $row;
-			}
+	 * Parameter
+	 * - input : Eingabestring
+	 */			
+	public static function encodeTime($input) {
+		$parts = explode(':', $input);
+		$val   = 0;
+		
+		if (count($parts) > 2) {
+			// Format: 1:12:23,45
+			$val += (intval($parts[0]) * 60 * 60 * 100);
+			$val += (intval($parts[1]) * 60 * 100);
+			$partsDec = explode(',', $parts[2]);
+		} else {
+			// Format: 1:12,23
+			$val += (intval($parts[0]) * 60 * 100);
+			$partsDec = explode(',', $parts[1]);
 		}
-
-		// Rückgabe
-		return $array;
+		$val += (intval($partsDec[0]) * 100);
+		$val += (intval($partsDec[1]));
+		
+		return $val;
 	}
 
 }
