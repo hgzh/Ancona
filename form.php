@@ -35,20 +35,25 @@ class bsForm extends Html {
 	
 	public function input($a) {
 		// Parameter prüfen
-		if (!isset($a['float']))       $a['float']       = false;
-		if (!isset($a['placeholder'])) $a['placeholder'] = (isset($a['label']) ? $a['label'] : '...');
-		if (!isset($a['maxlength']))   $a['maxlength']   = false;
-		if (!isset($a['required']))    $a['required']    = false;
-		if (!isset($a['readonly']))    $a['readonly']    = false;
-		if (!isset($a['disabled']))    $a['disabled']    = false;
-		if (!isset($a['value']))       $a['value']       = false;
-		if (!isset($a['name']))        return 'Fehler: name= fehlt für input';
-		if (!isset($a['type']))        return 'Fehler: type= fehlt für input';
+		$a['float']       ??= false;
+		$a['placeholder'] ??= (isset($a['label']) ? $a['label'] : '...');
+		$a['maxlength']   ??= false;
+		$a['required']    ??= false;
+		$a['readonly']    ??= false;
+		$a['disabled']    ??= false;
+		$a['value']       ??= false;
+		if (!isset($a['name'])) return 'Fehler: name= fehlt für input';
+		if (!isset($a['type'])) return 'Fehler: type= fehlt für input';
 		
 		// wenn label oder text, dann umschließendes Element
 		if (isset($a['label']) || isset($a['text'])) {
 			$enclose = true;
+		} else {
+			$enclose = false;
 		}
+		
+		// Tag-Text
+		$text = '';
 		
 		// umschließendes div beginnen
 		if ($enclose == true) {
@@ -111,20 +116,25 @@ class bsForm extends Html {
 	
 	public function textarea($a) {
 		// Parameter prüfen
-		if (!isset($a['height']))      $a['height']      = '10em';
-		if (!isset($a['float']))       $a['float']       = false;
-		if (!isset($a['placeholder'])) $a['placeholder'] = (isset($a['label']) ? $a['label'] : '...');
-		if (!isset($a['maxlength']))   $a['maxlength']   = false;
-		if (!isset($a['required']))    $a['required']    = false;
-		if (!isset($a['readonly']))    $a['readonly']    = false;
-		if (!isset($a['disabled']))    $a['disabled']    = false;
-		if (!isset($a['value']))       $a['value']       = false;
-		if (!isset($a['name']))        return 'Fehler: name= fehlt für textarea';
+		$a['height']      ??= '10em';
+		$a['float']       ??= false;
+		$a['placeholder'] ??= (isset($a['label']) ? $a['label'] : '...');
+		$a['maxlength']   ??= false;
+		$a['required']    ??= false;
+		$a['readonly']    ??= false;
+		$a['disabled']    ??= false;
+		$a['value']       ??= false;
+		if (!isset($a['name'])) return 'Fehler: name= fehlt für textarea';
 		
 		// wenn label oder text, dann umschließendes Element
 		if (isset($a['label']) || isset($a['text'])) {
 			$enclose = true;
+		} else {
+			$enclose = false;	
 		}
+
+		// Tag-Text
+		$text = '';
 		
 		// umschließendes div beginnen
 		if ($enclose == true) {
@@ -186,19 +196,24 @@ class bsForm extends Html {
 	
 	public function datetime($a) {
 		// Parameter prüfen
-		if (!isset($a['float']))       $a['float']       = false;
-		if (!isset($a['placeholder'])) $a['placeholder'] = (isset($a['label']) ? $a['label'] : '...');
-		if (!isset($a['required']))    $a['required']    = false;
-		if (!isset($a['readonly']))    $a['readonly']    = false;
-		if (!isset($a['disabled']))    $a['disabled']    = false;
-		if (!isset($a['value']))       $a['value']       = false;
-		if (!isset($a['name']))        return 'Fehler: name= fehlt für datetime';
-		if (!isset($a['type']))        return 'Fehler: type= fehlt für datetime';
+		$a['float']       ??= false;
+		$a['placeholder'] ??= (isset($a['label']) ? $a['label'] : '...');
+		$a['required']    ??= false;
+		$a['readonly']    ??= false;
+		$a['disabled']    ??= false;
+		$a['value']       ??= false;
+		if (!isset($a['name'])) return 'Fehler: name= fehlt für datetime';
+		if (!isset($a['type'])) return 'Fehler: type= fehlt für datetime';
 		
 		// wenn label oder text, dann umschließendes Element
 		if (isset($a['label']) || isset($a['text'])) {
 			$enclose = true;
+		} else {
+			$enclose = false;
 		}
+		
+		// Tag-Text
+		$text = '';
 		
 		// umschließendes div beginnen
 		if ($enclose == true) {
@@ -261,14 +276,19 @@ class bsForm extends Html {
 	
 	public function select($a) {
 		// Parameter prüfen
-		if (!isset($a['float']))    $a['float']    = false;
-		if (!isset($a['disabled'])) $a['disabled'] = false;
-		if (!isset($a['name']))     return 'Fehler: name= fehlt für input';
+		$a['float']    ??= false;
+		$a['disabled'] ??= false;
+		if (!isset($a['name'])) return 'Fehler: name= fehlt für input';
 		
 		// wenn label oder text, dann umschließendes Element
 		if (isset($a['label']) || isset($a['text'])) {
 			$enclose = true;
+		} else {
+			$enclose = false;
 		}
+
+		// Tag-Text
+		$text = '';		
 		
 		// umschließendes div beginnen
 		if ($enclose == true) {
@@ -343,17 +363,23 @@ class bsForm extends Html {
 	
 	public function checkbox($a) {
 		// Parameter prüfen
-		if (!isset($a['float']))    $a['float']    = false;
-		if (!isset($a['disabled'])) $a['disabled'] = false;
-		if (!isset($a['checked']))  $a['checked']  = false;
-		if (!isset($a['value']))    $a['value']    = false;
-		if (!isset($a['name']))     return 'Fehler: name= fehlt für checkbox';
-		if (!isset($a['type']))     return 'Fehler: type= fehlt für checkbox';
+		$a['float']    ??= false;
+		$a['inline']   ??= false;
+		$a['disabled'] ??= false;
+		$a['checked']  ??= false;
+		$a['value']    ??= false;
+		if (!isset($a['name'])) return 'Fehler: name= fehlt für checkbox';
+		if (!isset($a['type'])) return 'Fehler: type= fehlt für checkbox';
 
 		// wenn label oder text, dann umschließendes Element
 		if (isset($a['label'])) {
 			$enclose = true;
+		} else {
+			$enclose = false;
 		}
+
+		// Tag-Text
+		$text = '';		
 		
 		// umschließendes div beginnen
 		if ($enclose == true) {
@@ -394,6 +420,9 @@ class bsForm extends Html {
 	}
 	
 	public function button($a) {
+		// Tag-Text
+		$text = '';		
+		
 		// Button-Group öffnen, falls nötig
 		if (isset($a['group'])) {
 			// size
@@ -425,10 +454,10 @@ class bsForm extends Html {
 
 		foreach ($a['*'] as $b) {			
 			// Parameter prüfen
-			if (!isset($b['disabled'])) $b['disabled'] = false;
-			if (!isset($b['value']))    $b['value']    = false;
-			if (!isset($b['name']))     $b['name']     = false;
-			if (!isset($b['type']))     return 'Fehler: type= fehlt für button';
+			$b['disabled'] ??= false;
+			$b['value']    ??= false;
+			$b['name']     ??= false;
+			if (!isset($b['type'])) return 'Fehler: type= fehlt für button';
 						
 			// Input einfügen
 			$text .= $this->elem('button', ['type'     => $b['type'],
