@@ -1,16 +1,16 @@
 <?php
 /**
  * ##### database.php #####
- * hgzWeb: Datenbankfunktionen
+ * Ancona: Datenbankfunktionen
  *
  * (C) 2015-2023 Hgzh
  *
  */
 
-namespace hgzWeb\DatabaseService;
+namespace Ancona\DatabaseService;
 
-use hgzWeb\ConfigService as Config;
-use hgzWeb\ExceptionService as Exception;
+use Ancona\ConfigService as Config;
+use Ancona\ExceptionService as Exception;
 
 /**
  * ##### CLASS Handler CLASS #####

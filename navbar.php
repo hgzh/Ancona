@@ -1,13 +1,13 @@
 <?php
 /**
  * ##### navbar.php #####
- * hgzWeb: Navigationsleisten
+ * Ancona: Navigationsleisten
  *
  * (C) 2023 Hgzh
  *
  */
 
-namespace hgzWeb\DocumentService;
+namespace Ancona\DocumentService;
 
 /**
  * ##### CLASS navbar CLASS #####

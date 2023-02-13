@@ -1,13 +1,13 @@
 <?php
 /**
  * ##### exception.php #####
- * hgzWeb: Ausnahmebehandlung
+ * Ancona: Ausnahmebehandlung
  *
  * (C) 2023 Hgzh
  *
  */
 
-namespace hgzWeb\ExceptionService;
+namespace Ancona\ExceptionService;
 
 /**
  * ##### CLASS Database CLASS #####

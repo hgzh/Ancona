@@ -1,13 +1,13 @@
 <?php
 /**
  * ##### config.php #####
- * hgzWeb: Konfiguration
+ * Ancona: Konfiguration
  *
  * (C) 2023 Hgzh
  *
  */
 
-namespace hgzWeb\ConfigService;
+namespace Ancona\ConfigService;
 
 require_once( 'configMessages.php' );
 require_once( 'configFramework.php' );

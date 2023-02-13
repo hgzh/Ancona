@@ -1,13 +1,13 @@
 <?php
 /**
- * ##### general.php #####
- * hgzWeb: Hauptdatei des Frameworks
+ * ##### ancona.php #####
+ * Ancona: Hauptdatei des Frameworks
  *
  * (C) 2015-2023 Hgzh
  *
  */
 
-namespace hgzWeb;
+namespace Ancona;
 
 require_once('config.php');    // Benutzerkonfiguration
 require_once('html.php');      // HTML
@@ -16,15 +16,15 @@ require_once('database.php');  // Datenbanken
 require_once('exception.php'); // Exceptions
 require_once('navbar.php');    // Navigationsleiste
 
-use hgzWeb\ConfigService as Config;
-use hgzWeb\HtmlService\Html as Html;
-use hgzWeb\DocumentService as Document;
+use Ancona\ConfigService as Config;
+use Ancona\HtmlService\Html as Html;
+use Ancona\DocumentService as Document;
 
 /**
- * ##### CLASS hgzWeb CLASS #####
+ * ##### CLASS Ancona CLASS #####
  * Bootstrap-Dokument
  */
-class hgzWeb {
+class Ancona {
 
 	// Version
 	public const VERSION = '1.02.220328';
@@ -136,7 +136,7 @@ class hgzWeb {
 		$m = new Html();
 
 		// Nav-Element
-		$m->addHTML( '<nav id="hgzweb-navbar" class="navbar navbar-expand-lg hgzweb-owncolor ' . $navClass . '"' );
+		$m->addHTML( '<nav id="ancona-navbar" class="navbar navbar-expand-lg ancona-owncolor ' . $navClass . '"' );
 		if ( Config\framework::get( 'navbar-color' ) !== false ) { 
 			$m->addHTML( ' style="background-color:' . Config\framework::get( 'navbar-color' ) . '"' );
 		}
@@ -146,9 +146,9 @@ class hgzWeb {
 		$m->openContainer();
 
 		// Logo
-		$m->addLink( hgzweb::getAbs(), 
+		$m->addLink( Ancona::getAbs(), 
 					 '<img src="'
-					   . hgzWeb::getAbs()
+					   . Ancona::getAbs()
 					   . '_images/' . Config\framework::get( 'image-logo' )
 					   . '" height="35"/>',
 					 'navbar-brand' );
@@ -242,7 +242,7 @@ class hgzWeb {
 			if ( $logout === true ) {
 				$m->addInline( 'div', '', 'dropdown-divider' );
 				$m->addHTML( '<form class="form-inline px-4 py-1" action="'
-							   . hgzWeb::getAbs()
+							   . Ancona::getAbs()
 							   . Config\framework::get( 'auth-url' )
 							   . '" method="POST">'
 						   );
@@ -270,7 +270,7 @@ class hgzWeb {
 					   );
 			$m->openBlock( 'div', 'dropdown-menu' );
 			$m->addHTML( '<form class="px-3 py-2" action="'
-						   . hgzWeb::getAbs()
+						   . Ancona::getAbs()
 						   . Config\framework::get( 'auth-url' )
 						   . '" method="POST">' );
 			$m->addHTML( '<input class="form-control form-control-sm" type="text" name="lgname" placeholder="'
@@ -289,7 +289,7 @@ class hgzWeb {
 		// Logout-Maske anzeigen
 		if ( $logout === true && !isset( $nav['!account'] ) ) {
 			$m->addHTML( '<form class="form-inline my-2 my-lg-0" action="'
-						   . hgzWeb::getAbs()
+						   . Ancona::getAbs()
 						   . Config\framework::get( 'auth-url' )
 						   . '" method="POST">');
 			$m->addHTML( '<input type="hidden" name="lgtype" value="logout" />' );
@@ -395,10 +395,10 @@ class hgzWeb {
 			
 		// Autoloader für eigene JS- und CSS-Dateien
 		if ( $this->flags['custom-js'] === true ) {
-			$this->loadJS( hgzWeb::getAbs() . 'addjs.js');
+			$this->loadJS( Ancona::getAbs() . 'addjs.js');
 		}
 		if ( $this->flags['custom-css'] === true ) {
-			$this->loadCSS( hgzWeb::getAbs() . 'addcss.css');
+			$this->loadCSS( Ancona::getAbs() . 'addcss.css');
 		}
 	}
 
@@ -465,7 +465,7 @@ class hgzWeb {
 		// Favicon
 		$headHtml .= Html::elem( 'link',
 								 [ 'rel'         => 'shortcut icon',
-								   'href'        => hgzWeb::getAbs()
+								   'href'        => Ancona::getAbs()
 								                    . '_images/' . Config\framework::get( 'image-favicon' )
 								 ],
 								 '',
@@ -510,7 +510,7 @@ class hgzWeb {
 		$m->addHTML( $this->navTop );
 		
 		// Container mit Y-Abstand
-		$m->openContainer( false, 'mt-3', 'hgzweb-content' );
+		$m->openContainer( false, 'mt-3', 'ancona-content' );
 		
 		// Systemnachricht
 		$this->getMessage();
@@ -521,8 +521,8 @@ class hgzWeb {
 		
 		// Fußbereich
 		$m->addHTML( Html::elem( 'div',
-							     [ 'class' => 'row bg-light mt-4 pt-3 hgzweb-owncolor',
-								   'id'    => 'hgzweb-footer'
+							     [ 'class' => 'row bg-light mt-4 pt-3 ancona-owncolor',
+								   'id'    => 'ancona-footer'
 								 ],
 							     $this->getFooterText())
 				   );
