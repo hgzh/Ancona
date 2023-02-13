@@ -136,7 +136,7 @@ class Ancona {
 		$m = new Html();
 
 		// Nav-Element
-		$m->addHTML( '<nav id="ancona-navbar" class="navbar navbar-expand-lg ancona-owncolor ' . $navClass . '"' );
+		$m->addHTML( '<nav id="anc-navbar" class="navbar navbar-expand-lg anc-owncolor ' . $navClass . '"' );
 		if ( Config\framework::get( 'navbar-color' ) !== false ) { 
 			$m->addHTML( ' style="background-color:' . Config\framework::get( 'navbar-color' ) . '"' );
 		}
@@ -510,7 +510,7 @@ class Ancona {
 		$m->addHTML( $this->navTop );
 		
 		// Container mit Y-Abstand
-		$m->openContainer( false, 'mt-3', 'ancona-content' );
+		$m->openContainer( false, 'mt-3', 'anc-content' );
 		
 		// Systemnachricht
 		$this->getMessage();
@@ -521,8 +521,8 @@ class Ancona {
 		
 		// Fußbereich
 		$m->addHTML( Html::elem( 'div',
-							     [ 'class' => 'row bg-light mt-4 pt-3 ancona-owncolor',
-								   'id'    => 'ancona-footer'
+							     [ 'class' => 'row bg-light mt-4 pt-3 anc-owncolor',
+								   'id'    => 'anc-footer'
 								 ],
 							     $this->getFooterText())
 				   );

@@ -30,7 +30,7 @@ class bsForm extends Html {
 		
 		$this->name     = $name;
 		$this->content .= $this->elem( 'form',
-									   [ 'id' => 'ancona-form-' . $name,
+									   [ 'id' => 'anc-form-' . $name,
 										 'action' => $action,
 										 'method' => $method,
 										 'class'  => $class
@@ -81,7 +81,7 @@ class bsForm extends Html {
 		// Label (normal)
 		if ( isset( $a['label'] ) && $a['float'] == false ) {
 			$text .= $this->elem( 'label',
-								  [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+								  [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 								   	'class' => 'form-label'
 								  ],
 								  $a['label'] . ':',
@@ -90,7 +90,7 @@ class bsForm extends Html {
 		
 		// Input
 		$text .= $this->elem( 'input', [ 'type'             => $a['type'],
-									     'id'               => 'lsm-' . $this->name . '-' . $a['name'],
+									     'id'               => 'anc-' . $this->name . '-' . $a['name'],
 									     'name'             => $a['name'],
 									     'class'            => 'form-control'
 									                           . ( isset( $a['size'] ) 
@@ -104,7 +104,7 @@ class bsForm extends Html {
 									     'disabled'         => $a['disabled'],
 									     'value'            => $a['value'],
 									     'aria-describedby' => ( isset( $a['text'] ) 
-																 ? 'lsm-' . $this->name . '-' . $a['name'] . '-text' 
+																 ? 'anc-' . $this->name . '-' . $a['name'] . '-text' 
 																 : false
 															   )
 									   ],
@@ -113,7 +113,7 @@ class bsForm extends Html {
 		
 		// Label für form-floating
 		if ( isset( $a['label'] ) && $a['float'] == true ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 										     'class' => 'form-label'
 										   ],
 								  $a['label'],
@@ -122,7 +122,7 @@ class bsForm extends Html {
 		
 		// Hilfetext
 		if ( isset( $a['text'] ) ) {
-			$text .= $this->elem( 'div', [ 'id'    => 'lsm-' . $this->name . '-' . $a['name'] . '-text',
+			$text .= $this->elem( 'div', [ 'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
 										   'class' => 'form-text'
 										 ],
 								  $a['text'],
@@ -178,7 +178,7 @@ class bsForm extends Html {
 		
 		// Label (normal)
 		if ( isset( $a['label'] ) && $a['float'] == false) {
-			$text .= $this->elem( 'label', [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 										     'class' => 'form-label'
 										   ],
 								  $a['label'] . ':',
@@ -186,7 +186,7 @@ class bsForm extends Html {
 		}
 		
 		// Textarea
-		$text .= $this->elem( 'textarea', [ 'id'               => 'lsm-' . $this->name . '-' . $a['name'],
+		$text .= $this->elem( 'textarea', [ 'id'               => 'anc-' . $this->name . '-' . $a['name'],
 										    'name'             => $a['name'],
 										    'class'            => 'form-control',
 										    'style'            => 'height:' . $a['height'],
@@ -196,7 +196,7 @@ class bsForm extends Html {
 										    'readonly'         => $a['readonly'],
 										    'disabled'         => $a['disabled'],
 										    'aria-describedby' => ( isset( $a['text'] )
-																    ? 'lsm-' . $this->name . '-' . $a['name'] . '-text'
+																    ? 'anc-' . $this->name . '-' . $a['name'] . '-text'
 																    : false
 																  )
 										 ],
@@ -205,7 +205,7 @@ class bsForm extends Html {
 
 		// Label für form-floating
 		if ( isset( $a['label'] ) && $a['float'] == true ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 										     'class' => 'form-label'
 										   ],
 								  $a['label'],
@@ -214,7 +214,7 @@ class bsForm extends Html {
 		
 		// Hilfetext
 		if ( isset( $a['text'] ) ) {
-			$text .= $this->elem( 'div', [ 'id'    => 'lsm-' . $this->name . '-' . $a['name'] . '-text',
+			$text .= $this->elem( 'div', [ 'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
 										   'class' => 'form-text'
 										 ],
 								  $a['text'],
@@ -271,7 +271,7 @@ class bsForm extends Html {
 
 		// Label (normal)
 		if ( isset( $a['label'] ) && $a['float'] == false ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 										     'class' => 'form-label'
 										   ],
 								  $a['label'] . ':',
@@ -280,17 +280,17 @@ class bsForm extends Html {
 		
 		// Input
 		$text .= $this->elem( 'input', [ 'type'             => 'text',
-									     'id'               => 'lsm-' . $this->name . '-' . $a['name'],
+									     'id'               => 'anc-' . $this->name . '-' . $a['name'],
 									     'name'             => $a['name'],
-									     'class'            => 'form-control datetimepicker-input lsm-date-' . $a['type'],
-									     'data-target'      => '#' . 'lsm-' . $this->name . '-' . $a['name'],
+									     'class'            => 'form-control datetimepicker-input anc-date-' . $a['type'],
+									     'data-target'      => '#' . 'anc-' . $this->name . '-' . $a['name'],
 									     'placeholder'      => $a['placeholder'],
 									     'required'         => $a['required'],
 									     'readonly'         => $a['readonly'],
 									     'disabled'         => $a['disabled'],
 									     'value'            => $a['value'],
 									     'aria-describedby' => ( isset( $a['text'] )
-																 ? 'lsm-' . $this->name . '-' . $a['name'] . '-text'
+																 ? 'anc-' . $this->name . '-' . $a['name'] . '-text'
 																 : false
 															   )
 									   ],
@@ -299,7 +299,7 @@ class bsForm extends Html {
 
 		// Label für form-floating
 		if ( isset( $a['label'] ) && $a['float'] == true ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 										     'class' => 'form-label'
 										   ],
 								 $a['label'],
@@ -308,7 +308,7 @@ class bsForm extends Html {
 		
 		// Hilfetext
 		if ( isset( $a['text'] ) ) {
-			$text .= $this->elem( 'div', [ 'id'    => 'lsm-' . $this->name . '-' . $a['name'] . '-text',
+			$text .= $this->elem( 'div', [ 'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
 										   'class' => 'form-text'
 										 ],
 								 $a['text'],
@@ -358,7 +358,7 @@ class bsForm extends Html {
 		
 		// Label (normal)
 		if ( isset( $a['label'] ) && $a['float'] == false ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 										     'class' => 'form-label'
 										   ],
 								  $a['label'] . ':',
@@ -366,7 +366,7 @@ class bsForm extends Html {
 		}
 		
 		// Select
-		$text .= $this->elem( 'select', [ 'id'               => 'lsm-' . $this->name . '-' . $a['name'],
+		$text .= $this->elem( 'select', [ 'id'               => 'anc-' . $this->name . '-' . $a['name'],
 										  'name'             => $a['name'],
 										  'class'            => 'form-control'
 										                        . ( isset( $a['size'] )
@@ -375,7 +375,7 @@ class bsForm extends Html {
 																  ),
 										  'disabled'         => $a['disabled'],
 										  'aria-describedby' => ( isset($a['text'] )
-																  ? 'lsm-' . $this->name . '-' . $a['name'] . '-text'
+																  ? 'anc-' . $this->name . '-' . $a['name'] . '-text'
 																  : false
 																)
 									   ],
@@ -404,7 +404,7 @@ class bsForm extends Html {
 		
 		// Label für form-floating
 		if ( isset( $a['label'] ) && $a['float'] == true ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 										     'class' => 'form-label'
 										   ],
 								 $a['label'],
@@ -413,7 +413,7 @@ class bsForm extends Html {
 		
 		// Hilfetext
 		if ( isset( $a['text'] ) ) {
-			$text .= $this->elem( 'div', [ 'id'    => 'lsm-' . $this->name . '-' . $a['name'] . '-text',
+			$text .= $this->elem( 'div', [ 'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
 										   'class' => 'form-text'
 										 ],
 								 $a['text'],
@@ -470,7 +470,7 @@ class bsForm extends Html {
 
 		// Checkbox
 		$text .= $this->elem( 'input', [ 'type'             => $a['type'],
-									     'id'               => 'lsm-' . $this->name . '-' . $a['name'],
+									     'id'               => 'anc-' . $this->name . '-' . $a['name'],
 									     'name'             => $a['name'],
 									     'class'            => 'form-check-input'
 										                       . ( isset($a['inpclass'] )
@@ -481,7 +481,7 @@ class bsForm extends Html {
 									     'checked'          => $a['checked'],
 									     'value'            => $a['value'],
 									     'aria-describedby' => ( isset($a['text'] )
-																 ? 'lsm-' . $this->name . '-' . $a['name'] . '-text'
+																 ? 'anc-' . $this->name . '-' . $a['name'] . '-text'
 																 : false
 															   )
 									   ],
@@ -490,7 +490,7 @@ class bsForm extends Html {
 		
 		// Label
 		if ( isset($a['label'])) {
-			$text .= $this->elem( 'label', [ 'for'   => 'lsm-' . $this->name . '-' . $a['name'],
+			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
 										     'class' => 'form-check-label'
 										   ],
 								  $a['label'],
@@ -552,7 +552,7 @@ class bsForm extends Html {
 						
 			// Input einfügen
 			$text .= $this->elem( 'button', [ 'type'     => $b['type'],
-											  'id'       => 'lsm-' . $this->name . '-'
+											  'id'       => 'anc-' . $this->name . '-'
 											                . ( $b['name'] == false 
 															    ? $b['type']
 															    : $b['name']
