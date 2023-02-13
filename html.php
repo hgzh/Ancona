@@ -3,15 +3,16 @@
  * ##### html.php #####
  * hgzWeb: Bootstrap-Html-Framework
  *
- * (C) 2015-2021 Hgzh
+ * (C) 2015-2023 Hgzh
  *
  */
+
+namespace hgzWeb\HtmlService;
 
 /**
  * ##### CLASS Html CLASS #####
  * Html-Strukturen für Bootstrap erstellen
  */
-
 class Html {
 
 	// Inhalt
@@ -38,23 +39,23 @@ class Html {
 	 * - content : Inhalt des Tags
 	 * - close	 : Tag wieder schließen
 	 */
-	public static function elem($tag, $args = [], $content = '', $close = true) {
+	public static function elem( $tag, $args = [], $content = '', $close = true ) {
 		// Lowercase
-		$tag = strtolower($tag);
+		$tag = strtolower( $tag );
 
 		// Tag öffnen und Attribute eintragen
 		$txt = '<' . $tag;
-		foreach ($args as $k => $v) {
+		foreach ( $args as $k => $v ) {
 			// leere Attribute überspringen
-			if ($v === false || $v === '') {
+			if ( $v === false || $v === '' ) {
 				continue;
 			}
 
 			// Attributname
-			$txt .= ' ' . strtolower($k);
+			$txt .= ' ' . strtolower( $k );
 
 			// Attributwert, wenn nicht alleinstehend (HTML5)
-			if ($v !== true) {
+			if ( $v !== true ) {
 				$txt .= '="' . $v . '"';
 			}
 		}
@@ -64,8 +65,8 @@ class Html {
 		$txt .= $content;
 
 		// HTML5: keine selbstschließenden Tags
-		if ($close === true) {
-			switch ($tag) {
+		if ( $close === true ) {
+			switch ( $tag ) {
 				case 'br' :
 				case 'hr' :
 					break;
@@ -90,19 +91,19 @@ class Html {
 	 * - id    : Selektor
 	 * - role  : Role-Angabe
 	 */
-	public function openBlock($tag, $class = false, $style = false, $id = false, $role = false) {
-		$elem = $this->elem($tag,
-							['class' => $class,
-							 'style' => $style,
-							 'id'	 => $id,
-							 'role'	 => $role
-							],
-							'',
-							false);
+	public function openBlock( $tag, $class = false, $style = false, $id = false, $role = false ) {
+		$elem = $this->elem( $tag,
+							 [ 'class' => $class,
+							   'style' => $style,
+							   'id'	   => $id,
+							   'role'  => $role
+							 ],
+							 '',
+							 false );
 		$this->content .= $elem;
 
 		// auf den Stack
-		$this->stack->push($tag);
+		$this->stack->push( $tag );
 	}
 
 	/**
@@ -113,8 +114,8 @@ class Html {
 	 * Parameter
 	 * - nr : Anzahl der mit einem Aufruf zu schließenden Tags
 	 */
-	public function closeBlock($nr = 1) {
-		for ($i = 0; $i < $nr; $i++) {
+	public function closeBlock( $nr = 1 ) {
+		for ( $i = 0; $i < $nr; $i++ ) {
 			$tag = $this->stack->pop();
 			$this->content .= '</' . $tag . '>';
 		}
@@ -129,13 +130,15 @@ class Html {
 	 * - content : Inhalt des Tags
 	 * - class   : Klassenangaben
 	 * - style   : CSS-Style-Angaben
+	 * - id      : ID
 	 */		
-	public function addInline($tag, $content = '', $class = false, $style = false) {
-		$this->content .= $this->elem($tag,
-									  ['class' => $class,
-									   'style' => $style
-									  ],
-									  $content);
+	public function addInline( $tag, $content = '', $class = false, $style = false, $id = false ) {
+		$this->content .= $this->elem( $tag,
+									   [ 'class' => $class,
+									     'style' => $style,
+										 'id'    => $id
+									   ],
+									   $content );
 	}
 
 	/**
@@ -158,16 +161,16 @@ class Html {
 	 * - pclass : CSS-Klassen
 	 * - id     : CSS-ID
 	 */
-	public function openContainer($size = false, $pclass = false, $id = false) {
+	public function openContainer( $size = false, $pclass = false, $id = false ) {
 		$class = 'container';
-		if ($size) {
+		if ( $size ) {
 			$class .= '-' . $size;
 		}
-		if ($pclass) {
+		if ( $pclass ) {
 			$class .= ' ' . $pclass;
 		}
 
-		$this->openBlock('div', $class, false, $id);
+		$this->openBlock( 'div', $class, false, $id );
 	}
 
 	/**
@@ -186,16 +189,16 @@ class Html {
 	 * - justify : Ausrichtung des Inhalts
 	 * - pclass  : CSS-Klassen
 	 */
-	public function openRow($justify = '', $pclass = '') {
+	public function openRow( $justify = '', $pclass = '' ) {
 		$class = 'row';
-		if ($justify != '') {
+		if ( $justify != '' ) {
 			$class .= ' justify-content-' . $justify;
 		}
-		if ($class != '') {
+		if ( $class != '' ) {
 			$class .= ' ' . $pclass;
 		}
 
-		$this->openBlock('div', $class);
+		$this->openBlock( 'div', $class );
 	}
 
 	/**
@@ -215,19 +218,19 @@ class Html {
 	 * - cols	: Breitenangabe (max. 12)
 	 * - pclass	: CSS-Klassen
 	 */
-	public function openCol($device = '', $cols = 0, $pclass = '') {
+	public function openCol( $device = '', $cols = 0, $pclass = '' ) {
 		$class = 'col';
-		if ($device != '') {
+		if ( $device != '' ) {
 			$class .= '-' . $device;
 		}
-		if ($cols != 0) {
+		if ( $cols != 0 ) {
 			$class .= '-' . $cols;
 		}
-		if ($class != '') {
+		if ( $class != '' ) {
 			$class .= ' ' . $pclass;
 		}
 
-		$this->openBlock('div', $class);
+		$this->openBlock( 'div', $class );
 	}
 
 	/**
@@ -246,9 +249,10 @@ class Html {
 	 * - level : Überschriftenebene
 	 * - text  : Text der Überschrift
 	 * - class : CSS-Klasse
+	 * - id    : ID
 	 */
-	public function addHeading($level, $text, $class = false) {
-		$this->addInline('h' . $level, $text, $class);
+	public function addHeading( $level, $text, $class = false, $id = false ) {
+		$this->addInline( 'h' . $level, $text, $class, $id );
 	}
 
 	/**
@@ -260,8 +264,8 @@ class Html {
 	 * - class : CSS-Klassen
 	 * - style : CSS-Styles
 	 */
-	public function addParagraph($text, $class = '', $style = '') {
-		$this->addInline('p', $text, $class, $style);
+	public function addParagraph( $text, $class = '', $style = '' ) {
+		$this->addInline( 'p', $text, $class, $style );
 	}
 
 	/**
@@ -274,15 +278,15 @@ class Html {
 	 * - class  : CSS-Klassen
 	 * - target : Target
 	 */
-	public function addLink($href, $text, $class = false, $target = false, $id = false, $title = false) {
-		$elem = $this->elem('a',
-							['href'   => $href,
-							 'class'  => $class,
-							 'target' => $target,
-							 'id'     => $id,
-							 'title'  => $title
-							],
-							$text);
+	public function addLink( $href, $text, $class = false, $target = false, $id = false, $title = false ) {
+		$elem = $this->elem( 'a',
+							 [ 'href'   => $href,
+							   'class'  => $class,
+							   'target' => $target,
+							   'id'     => $id,
+							   'title'  => $title
+							 ],
+							 $text );
 
 		$this->content .= $elem;
 	}
@@ -299,18 +303,21 @@ class Html {
 	 * - class   : CSS-Klassen
 	 */
 	public function addModalToggleLink($modal, $icon, $text = '', $tooltip = '', $class = '') {
-		$elem = $this->elem('a',
-							['href'           => '#',
-							 'role'           => 'button',
-							 'data-bs-toggle' => 'modal',
-							 'data-bs-target' => '#' . $modal,
-							],
-							$this->elem('span',
-										['title'          => $tooltip
-										],
-										$this->elem('i',
-													['class' => 'fas fa-' . $icon . ' ' . $class
-													]) . ($text != '' ? ' ' . $text : '')
+		$elem = $this->elem( 'a',
+							 [ 'href'           => '#',
+							   'role'           => 'button',
+							   'data-bs-toggle' => 'modal',
+							   'data-bs-target' => '#' . $modal,
+							 ],
+							 $this->elem( 'span',
+										  [ 'title' => $tooltip ],
+										  $this->elem( 'i',
+													   [ 'class' => 'fas fa-' . $icon . ' ' . $class ]
+													 )
+										    . ( $text != ''
+											    ? ' ' . $text
+											    : ''
+											  )
 									   )
 						   );
 		
@@ -325,10 +332,10 @@ class Html {
 	 * - type 	 : sortierte (ol) oder unsortierte (ul) Liste
 	 * - entries : Array mit den Einträgen
 	 */
-	public function addList($type, $entries) {
-		$this->openBlock($type);
-		foreach ($entries as $e) {
-			$this->addInline('li', $e);
+	public function addList( $type, $entries ) {
+		$this->openBlock( $type );
+		foreach ( $entries as $e ) {
+			$this->addInline( 'li', $e );
 		}
 		$this->closeBlock();
 	}
@@ -341,36 +348,62 @@ class Html {
 	 * - name 	 : Name des Tab-Elements
 	 * - entries : Array mit den einzelnen Tabs
 	 */
-	public function addNav($name, $entries) {
+	public function addNav( $name, $entries ) {
 		// Nav-Tabs öffnen
-		$this->openBlock('ul', 'nav nav-tabs sticky-top bg-white pt-2', 'z-index:999;top:3.8rem;', 'tab-' . $name, 'tabs');
+		$this->openBlock( 'ul', 'nav nav-tabs sticky-top bg-white pt-2', 'z-index:999;top:3.8rem;', 'tab-' . $name, 'tabs' );
 
 		// einzelne Tabs darstellen
 		$i = 0;
-		foreach ($entries as $e) {
-			if ($i === 0) {
+		foreach ( $entries as $e ) {
+			if ( $i === 0 ) {
 				// aktiver Tab beim ersten Laden der Seite
-				$this->addHTML('<li class="nav-item" role="presentation"><a class="nav-link	active" id="tab-' . $name . '-' . $e['id'] . '" data-bs-toggle="tab" href="#tab-' . $name . '-' . $e['id'] . '-cont" role="tab" aria-controls="tab-' . $name . '-' . $e['id'] . '-cont" aria-selected="true">' . $e['text'] . '</a></li>');
+				$class = 'nav-link active';
+				$aria  = 'true';
 			} else {
 				// alle anderen Tabs
-				$this->addHTML('<li class="nav-item" role="presentation"><a class="nav-link" id="tab-' . $name . '-' . $e['id'] . '" data-bs-toggle="tab" href="#tab-' . $name . '-' . $e['id'] . '-cont" role="tab" aria-controls="tab-' . $name . '-' . $e['id'] . '-cont" aria-selected="false">' . $e['text'] . '</a></li>');
+				$class = 'nav-link';
+				$aria  = 'false';
 			}
+			$this->addHTML( $this->elem( 'li',
+										 [ 'class' => 'nav-item',
+										   'role'  => 'presentation'
+										 ],
+										 $this->elem( 'a',
+													  [ 'class'          => $class,
+													    'id'             => 'tab-' . $name . '-' . $e['id'],
+													    'data-bs-toggle' => 'tab',
+													    'href'           => '#tab-' . $name . '-' . $e['id'] . '-cont',
+													    'role'           => 'tab',
+													    'aria-controls'  => 'tab-' . $name . '-' . $e['id'] . '-cont',
+													    'aria-selected'  => $aria
+													  ],
+													  $e['text']
+												   )
+									   ) );
 			$i++;
 		}
 		$this->closeBlock();
 
 		// Tab-Inhalte
-		$this->openBlock('div', 'tab-content', '', 'tab-' . $name . '-container');
+		$this->openBlock( 'div', 'tab-content', '', 'tab-' . $name . '-container' );
 
 		$i = 0;
-		foreach ($entries as $e) {
-			if ($i === 0) {
+		foreach ( $entries as $e ) {
+			if ( $i === 0 ) {
 				// aktiver Tab beim ersten Laden der Seite
-				$this->addHTML('<div class="tab-pane fade show active" id="tab-' . $name . '-' . $e['id'] . '-cont" role="tabpanel" aria-labelledby="tab-' . $name . '-' . $e['id'] . '">' . $e['content'] . '</div>');
+				$class = 'tab-pane fade show active';
 			} else {
 				// alle anderen Tabs
-				$this->addHTML('<div class="tab-pane fade" id="tab-' . $name . '-' . $e['id'] . '-cont" role="tabpanel" aria-labelledby="tab-' . $name . '-' . $e['id'] . '">' . $e['content'] . '</div>');
+				$class = 'tab-pane fade';
 			}
+			$this->addHTML( $this->elem( 'div',
+										 [ 'class' => $class,
+										   'id'    => 'tab-' . $name . '-' . $e['id'] . '-cont',
+										   'role'  => 'tabpanel',
+										   'aria-labelledby' => 'tab-' . $name . '-' . $e['id']
+										 ],
+										 $e['content']
+										) );
 			$i++;
 		}
 
@@ -386,31 +419,46 @@ class Html {
 	 * - name 	 : Name des Accordion-Elements
 	 * - entries : Array mit den einzelnen Elementen
 	 */
-	public function addAccordion($name, $entries) {
+	public function addAccordion( $name, $entries ) {
 		// Nav-Tabs öffnen
-		$this->openBlock('div', 'accordion', '', 'acc-' . $name);
+		$this->openBlock( 'div', 'accordion', '', 'acc-' . $name );
 		
 		// einzelne Elemente darstellen
 		$i = 0;
-		foreach ($entries as $e) {
-			if (isset($e['html'])) {
-				$this->addHTML($e['html']);
+		foreach ( $entries as $e ) {
+			if ( isset( $e['html'] ) ) {
+				$this->addHTML( $e['html'] );
 				continue;
 			}
 			
-			$this->openBlock('div', 'accordion-item');
+			$this->openBlock( 'div', 'accordion-item' );
 			
 			// Header
-			$this->openBlock('div', 'accordion-header', '', 'acc-' . $name . '-' . $e['id'] . '-head');
-			$this->addHTML('<button class="accordion-button collapsed p-2" data-bs-toggle="collapse" data-bs-target="#acc-' . $name . '-' . $e['id'] . '" aria-expanded="false" aria-controls="acc-' . $name . '-' . $e['id'] . '">' . $e['title'] . '</button>');
+			$this->openBlock( 'div', 'accordion-header', '', 'acc-' . $name . '-' . $e['id'] . '-head' );
+			$this->addHTML( $this->elem( 'button',
+										 [ 'class'          => 'accordion-button collapsed p-2',
+										   'data-bs-toggle' => 'collapse',
+										   'data-bs-target' => '#acc-' . $name . '-' . $e['id'],
+										   'aria-expanded'  => 'false',
+										   'aria-controls'  => 'acc-' . $name . '-' . $e['id']
+										 ],
+										 $e['title']
+										) );
 			$this->closeBlock();
 			
 			// Inhalt
-			$this->addHTML('<div id="acc-' . $name . '-' . $e['id'] . '" class="accordion-collapse collapse" aria-labelledby="staacc_head_' . $e['id'] . '" data-bs-parent="#acc-' . $name . '">');
-			$this->openBlock('div', 'accordion-body');
-			$this->addHTML($e['content']);
+			$this->addHTML( $this->elem( 'div',
+										 [ 'id' => 'acc-' . $name . '-' . $e['id'],
+										   'class' => 'ccordion-collapse collapse',
+										   'aria-labelledby' => 'acc-' . $name . '-' . $e['id'] . '-head',
+										   'data-bs-parent'  => '#acc-' . $name
+										 ],
+										 '',
+										 false ) );
+			$this->openBlock( 'div', 'accordion-body' );
+			$this->addHTML( $e['content'] );
 			$this->closeBlock();
-			$this->addHTML('</div>');
+			$this->addHTML( '</div>' );
 			
 			$this->closeBlock();
 		}
@@ -429,35 +477,53 @@ class Html {
 	 * - content : Inhalt des Dialogs
 	 * - footer  : Inhalt des Fußbereichs
 	 */
-	public function addModal($name, $title, $content, $footer = false, $class = '') {
+	public function addModal( $name, $title, $content, $footer = false, $class = '' ) {
 		// Modal beginnen
-		$this->addHTML('<div class="modal fade" id="mod-' . $name . '" tabindex="-1" aria-labelledby="mod-' . $name . '-label" aria-hidden="true">');
-		$this->openBlock('div', 'modal-dialog modal-dialog-scrollable ' . $class);
-		$this->openBlock('div', 'modal-content');
+		$this->addHTML( $this->elem( 'div',
+									 [ 'class'    => 'modal fade',
+									   'id'       => 'mod-' . $name,
+									   'tabindex' => '-1',
+									   'aria-labelledby' => 'mod-' . $name  . '-label',
+									   'aria-hidden'     => 'true'
+									 ],
+									 '',
+									 false ) );
+		$this->openBlock( 'div', 'modal-dialog modal-dialog-scrollable ' . $class );
+		$this->openBlock( 'div', 'modal-content' );
 		
 		// Kopfbereich
-		$this->openBlock('div', 'modal-header');
-		$this->addHTML('<h5 class="modal-title" id="mod-' . $name . '-label">' . $title . '</h5>');
-		$this->addHTML('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>');
+		$this->openBlock( 'div', 'modal-header' );
+		$this->addHeading( 5, $title, 'modal-title', 'mod-' . $name . '-label' );
+		$this->addHTML( $this->elem( 'button',
+									 [ 'type'            => 'button',
+									   'class'           => 'btn-close',
+									   'data-bs-dismiss' => 'modal',
+									   'aria-label'      => 'Schließen'
+									 ]
+									) );
 		$this->closeBlock();
 		
 		// Inhaltsbereich
-		$this->openBlock('div', 'modal-body');
-		$this->addHTML($content);
+		$this->openBlock( 'div', 'modal-body' );
+		$this->addHTML( $content );
 		$this->closeBlock();
 		
 		// Fußbereich
-		if ($footer !== false) {
-			$this->openBlock('div', 'modal-footer');
-			$this->addHTML($footer);
+		if ( $footer !== false ) {
+			$this->openBlock( 'div', 'modal-footer' );
+			$this->addHTML( $footer );
 			$this->closeBlock();
 		}
 		
 		// Modal schließen
-		$this->closeBlock(2);
-		$this->addHTML('</div>');
+		$this->closeBlock( 2 );
+		$this->addHTML( '</div>' );
 	}
 
+	/**
+	 * output()
+	 * gibt das erzeugte HTML zurück
+	 */
 	public function output() {
 		return $this->content;
 	}
