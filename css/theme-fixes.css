@@ -1,0 +1,28 @@
+/** 
+ * == (1) Anpassungen für linke Navigationsleiste ==
+ *
+ * Im dunklen Modus Pfeilsymbole und Linkfarbe
+ * überschreiben
+ */
+
+/* Subebenem mit Dreieck kennzeichen (aufklappbar) */
+[data-bs-theme="dark"] #anc-nav-left .btn-toggle::before {
+	width: 1.25em;
+	line-height: 0;
+	content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28255,255,255,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+	transition: transform .35s ease;
+	transform-origin: .5em 50%;
+	margin-right: .2rem;
+}
+
+/* aufgeklappter Zustand */
+[data-bs-theme="dark"] #anc-nav-left .btn-toggle[aria-expanded="true"]::before {
+	content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' transform='rotate%2890%29'%3e%3cpath fill='none' stroke='rgba%28255,255,255,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+}
+
+/* Linkfarbe */
+[data-bs-theme="dark"] .link-dark,
+[data-bs-theme="dark"] .link-dark:hover,
+[data-bs-theme="dark"] .link-dark:focus {
+	color: var(--bs-body-color) !important;
+}

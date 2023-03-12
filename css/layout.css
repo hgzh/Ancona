@@ -1,0 +1,101 @@
+/** 
+ * == (1) Grid für breite Anzeigen ==
+ *
+ * Positionierung der linken Navigationsleiste, falls vorhanden
+ * ansonsten Grid mit nur einem Bereich
+ */
+@media (min-width: 992px) {
+	#anc-body {
+		display: grid;
+		gap: 1rem;
+	}
+
+	#anc-body:not(.anc-nav-left-exists) {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			"main"
+	}
+
+	#anc-body.anc-nav-left-exists {
+		grid-template-columns: 1fr 5fr;
+		grid-template-areas:
+			"nav-left main"
+	}
+
+	#anc-content {
+		grid-area: main;
+	}
+	
+	/* sticky */	
+	#anc-nav-left {
+		grid-area: nav-left;
+		position: sticky;
+		top: 4.75rem;
+		z-index: 999;
+		height: calc(100vh - 12rem);
+		overflow-y: auto;
+	}
+	
+	/* Standards des Offcanvas überschreiben */
+	#anc-nav-left-content {
+		display: block !important;
+		position: relative;
+		visibility: unset;
+		transform: unset;
+	}
+	
+	/* Toggle für Offcanvas bei geringen Breiten hier ausblenden */
+	#anc-nav-left-toggle {
+		display: none;
+	}
+}
+
+/** 
+ * == (2) Anpassungen für linke Navigationsleiste ==
+ *
+ * Positionierung der linken Navigationsleiste, falls vorhanden
+ * ansonsten Grid mit nur einem Bereich
+ */
+
+/* Hover für Links */
+#anc-nav-left .nav-link:hover {
+	background-color: var(--bs-tertiary-bg);
+}
+
+/* Subebenem mit Dreieck kennzeichen (aufklappbar) */
+#anc-nav-left .btn-toggle::before {
+	width: 1.25em;
+	line-height: 0;
+	content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+	transition: transform .35s ease;
+	transform-origin: .5em 50%;
+	margin-right: .2rem;
+}
+
+/* aufgeklappter Zustand */
+#anc-nav-left .btn-toggle[aria-expanded="true"]::before {
+	content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' transform='rotate%2890%29'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+}
+
+/**
+ * == (3) Grid für Inhaltsbereich ==
+ *
+ * Positionierung von Message-Bereich und Sidebar
+ */
+#anc-content {
+	display: grid;
+	grid-template-columns: auto min-content;
+	grid-template-rows: min-content auto;
+	grid-template-areas:
+		"message message"
+		"main sidebar";
+}
+
+#anc-content-message {
+	grid-area: message;
+}
+
+#anc-content-main {
+	grid-area: main;
+}
+

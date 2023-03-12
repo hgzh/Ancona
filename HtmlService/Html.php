@@ -56,7 +56,7 @@ class Html {
 
 			// Attributwert, wenn nicht alleinstehend (HTML5)
 			if ( $v !== true ) {
-				$txt .= '="' . $v . '"';
+				$txt .= '="' . trim( $v ) . '"';
 			}
 		}
 		$txt .= '>';
@@ -189,16 +189,16 @@ class Html {
 	 * - justify : Ausrichtung des Inhalts
 	 * - pclass  : CSS-Klassen
 	 */
-	public function openRow( $justify = '', $pclass = '' ) {
+	public function openRow( $justify = '', $pclass = false, $style = false, $id = false ) {
 		$class = 'row';
-		if ( $justify != '' ) {
+		if ( $justify != false ) {
 			$class .= ' justify-content-' . $justify;
 		}
-		if ( $class != '' ) {
+		if ( $class != false ) {
 			$class .= ' ' . $pclass;
 		}
 
-		$this->openBlock( 'div', $class );
+		$this->openBlock( 'div', $class, $style, $id );
 	}
 
 	/**
@@ -218,19 +218,19 @@ class Html {
 	 * - cols	: Breitenangabe (max. 12)
 	 * - pclass	: CSS-Klassen
 	 */
-	public function openCol( $device = '', $cols = 0, $pclass = '' ) {
+	public function openCol( $device = false, $cols = 0, $pclass = false, $style = false, $id = false ) {
 		$class = 'col';
-		if ( $device != '' ) {
+		if ( $device != false ) {
 			$class .= '-' . $device;
 		}
 		if ( $cols != 0 ) {
 			$class .= '-' . $cols;
 		}
-		if ( $class != '' ) {
+		if ( $class != false ) {
 			$class .= ' ' . $pclass;
 		}
 
-		$this->openBlock( 'div', $class );
+		$this->openBlock( 'div', $class, $style, $id );
 	}
 
 	/**
@@ -252,7 +252,7 @@ class Html {
 	 * - id    : ID
 	 */
 	public function addHeading( $level, $text, $class = false, $id = false ) {
-		$this->addInline( 'h' . $level, $text, $class, $id );
+		$this->addInline( 'h' . $level, $text, $class, false, $id );
 	}
 
 	/**
@@ -303,27 +303,53 @@ class Html {
 	 * - class   : CSS-Klassen
 	 */
 	public function addModalToggleLink($modal, $icon, $text = '', $tooltip = '', $class = '') {
-		$elem = $this->elem( 'a',
-							 [ 'href'           => '#',
-							   'role'           => 'button',
-							   'data-bs-toggle' => 'modal',
-							   'data-bs-target' => '#' . $modal,
-							 ],
-							 $this->elem( 'span',
-										  [ 'title' => $tooltip ],
-										  $this->elem( 'i',
-													   [ 'class' => 'fas fa-' . $icon . ' ' . $class ]
-													 )
-										    . ( $text != ''
-											    ? ' ' . $text
-											    : ''
-											  )
-									   )
-						   );
-		
-		$this->content .= $elem;
+		$this->addToggleLink(
+			'modal',
+			$modal,
+			$this->elem(
+				'i',
+				[ 'class' => 'bi bi-' . $icon . ' ' . $class ]
+			) . ( $text != ''
+					? ' ' . $text
+					: ''
+				),
+			false,
+			$tooltip
+		);
 	}
 
+	/**
+	 * addToggleLink()
+	 * fügt einen Link ein, der ein Element per Toggle öffnet
+	 *
+	 * Parameter
+	 * - type    : Typ des Elements
+	 * - id      : ID des Elements
+	 * - icon    : Icon des Links
+	 * - text    : Linktext
+	 * - tooltip : Link-Tooltip
+	 * - class   : CSS-Klassen
+	 */
+	public function addToggleLink($type, $id, $text = '', $class = false, $tooltip = false) {
+		$elem = $this->elem(
+			'a',
+			[
+				'href'           => '#',
+				'role'           => 'button',
+				'data-bs-toggle' => $type,
+				'data-bs-target' => '#' . $id,
+				'class'          => $class
+			],
+			$this->elem(
+				'span',
+				[ 'title' => $tooltip ],
+				$text
+			)
+		);
+		
+		$this->content .= $elem;
+	}	
+	
 	/**
 	 * addList()
 	 * fügt eine HTML-Liste ein
@@ -520,6 +546,51 @@ class Html {
 		$this->addHTML( '</div>' );
 	}
 
+	/**
+	 * addOffcanvas()
+	 * fügt ein Bootstrap-Offcanvas-Element ein
+	 *
+	 * Parameter
+	 * - name 	  : Name des Offcanvas
+	 * - title	  : Titel des Offcanvas
+	 * - content  : Inhalt des Offcanvas
+	 * - position : Anzeigeposition
+	 */	
+	public function addOffcanvas( $name, $title, $content, $position = 'end' ) {
+		// Modal beginnen
+		$this->addHTML( $this->elem(
+			'div',
+			[
+				'class'           => 'offcanvas offcanvas-' . $position,
+				'id'              => 'ofc-' . $name,
+				'tabindex'        => '-1',
+				'aria-labelledby' => 'ofc-' . $name  . '-label',
+			],
+			'',
+			false ) );
+		
+		// Kopfbereich
+		$this->openBlock( 'div', 'offcanvas-header' );
+		$this->addHeading( 5, $title, 'offcanvas-title', 'ofc-' . $name . '-label' );
+		$this->addHTML( $this->elem(
+			'button',
+			[
+				'type'            => 'button',
+				'class'           => 'btn-close',
+				'data-bs-dismiss' => 'offcanvas',
+				'aria-label'      => 'Schließen'
+			] ) );
+		$this->closeBlock();
+		
+		// Inhaltsbereich
+		$this->openBlock( 'div', 'offcanvas-body' );
+		$this->addHTML( $content );
+		$this->closeBlock();
+		
+		// Offcanvas schließen
+		$this->addHTML( '</div>' );
+	}
+	
 	/**
 	 * output()
 	 * gibt das erzeugte HTML zurück
