@@ -1,6 +1,6 @@
 <?php
 /**
- * DocumentHandler/Resource
+ * == DocumentHandler/Resource ==
  * manage resources in Ancona
  *
  * (C) 2023 Hgzh

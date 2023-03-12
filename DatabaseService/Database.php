@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### database.php #####
- * Ancona: Datenbankfunktionen
+ * == DatabaseService ==
+ * Database handling
  *
  * (C) 2015-2023 Hgzh
  *
@@ -13,24 +13,23 @@ use Ancona\ConfigService as Config;
 use Ancona\ExceptionService as Exception;
 
 /**
- * ##### CLASS Handler CLASS #####
- * Datenbankerweiterungen zu mysqli
+ * == HANDLER CLASS ==
+ * mysqli extensions
  */
 class Handler extends \mysqli {
 	
 	/**
 	 * connectOwn()
-	 * Verbindung mit mysqli-Datenbank herstellen.
+	 * connect to mysql database
 	 *
-	 * Parameter
-	 * - host       : Datenbankhost
-	 * - accessName : Benutzername des Zugriffskontos
-	 * - accessPass : Passwort des Zugriffskontos
-	 * - name       : Name der Datenbank
+	 * @param host database host
+	 * @param accessName username for access
+	 * @param accessPass password for access
+	 * @param name database nme
 	 *
 	 */
 	public function connectOwn( $host = '', $accessName = '', $accessPass = '', $name = '' ) {
-		// Fallback, falls nicht angegeben
+		// fallback if not set
 		if ( $host == '' ) {
 			$host = 'localhost';
 		}
@@ -55,23 +54,22 @@ class Handler extends \mysqli {
 
 	/**
 	 * executeQuery()
-	 * erstellt ein prepared statement und führt daraus direkt eine Datenbankabfrage durch
+	 * creates a prepared statement and directly executes a database query
 	 *
-	 * Parameter
-	 * - (1)    : Query-String
-	 * - (2)    : Referenztypen (1. Parameter von bind_param)
-	 * - (3...) : Referenzen (folgende Parameter von bind_param)
+	 * @param (1) query string
+	 * @param (2) reference types (first parameter of mysqli's bind_param)
+	 * @param (3...) references (following parameters of mysqli's bind_param)
 	 */
 	public function executeQuery() {
 
-		// mindestens 1 Parameter muss vorhanden sein
+		// at least 1 parameter is required
 		$numParam = func_num_args();
 		if ( $numParam < 1 ) {
 			throw new Exception\Argument( __CLASS__ . '::executeQuery()',
-										  'Falsche Anzahl an Parametern' );
+										  'Wrong parameter count' );
 		}
 
-		// alle Parameter beziehen
+		// get all parameters
 		$parList = func_get_args();
 
 		$query = $this->prepare( $parList[0] );
@@ -79,27 +77,26 @@ class Handler extends \mysqli {
 			throw new Exception\Database( $this->error, $this->errno );
 		}
 
-		// ersten Parameter entfernen, der Rest wird an bind_param übergeben
+		// strip first parameter, hand the rest to bind_param
 		unset( $parList[0] );
 
-		// Übergabe, falls noch Parameter vorhanden sind
+		// only, if parameters are left
 		if ( count( $parList ) != 0 ) {
 			call_user_func_array( [$query, 'bind_param'], $this->refValues( $parList ) );
 		}
 
-		// Abfrage ausführen
+		// execute query
 		$query->execute();
 
-		// Statement-Objekt zurückgeben
+		// return statement object
 		return $query;
 	}
 	
 	/** 
 	 * fetchResult()
-	 * bezieht Ergebnisse von mysqli_stmt und mysqli_result in der gleichen Funktion
+	 * gets results of mysqli_stmt und mysqli_result in the same function call
 	 *
-	 * Parameter:
-	 * - query : mysqli result/statement
+	 * @param query mysqli result/statement
 	 */
 	public static function fetchResult( $query ) {   
 		$array = [];
@@ -107,21 +104,21 @@ class Handler extends \mysqli {
 		if ( $query instanceof \mysqli_stmt ) {
 			// mysqli_stmt
 
-			// Statement-Metadaten
+			// statement metadata
 			$query->store_result();
 			$variables = [];
 			$data      = [];
 			$meta      = $query->result_metadata();
 
-			// SQL-Feldnamen
+			// sql field names
 			while ( $field = $meta->fetch_field() ) {
 				$variables[] = &$data[$field->name];
 			}
 
-			// Ergebnisse an Feldnamen binden
+			// bind results to field names
 			call_user_func_array( [$query, 'bind_result'], $variables );
 			
-			// Daten beziehen
+			// get data
 			$i = 0;
 			while ( $query->fetch() ) {
 				$array[$i] = [];
@@ -133,22 +130,21 @@ class Handler extends \mysqli {
 		} elseif ( $query instanceof \mysqli_result ) {
 			// mysqli_result
 
-			// Alle Zeilen beziehen
+			// get all lines
 			while ( $row = $query->fetch_assoc() ) {
 				$array[] = $row;
 			}
 		}
 
-		// Rückgabe
+		// return result array
 		return $array;
 	}
 	
 	/**
 	 * refValues()
-	 * übergibt rohe Datenwerte als Referenz
+	 * passes raw data by reference
 	 *
-	 * Parameter
-	 * - arr : Array mit Werten
+	 * @param arr input array
 	 */
 	private function refValues( $arr ){
 		if ( strnatcmp( phpversion(), '5.3' ) >= 0) {
@@ -162,8 +158,8 @@ class Handler extends \mysqli {
 }
 
 /**
- * ##### CLASS Database CLASS #####
- * Datenbankfunktionen als Erweiterung zu mysqli
+ * == DATABASE CLASS ==
+ * deprecated functions
  */
 class Database extends \mysqli {
 
@@ -288,18 +284,17 @@ class Database extends \mysqli {
 }
 
 /**
- * ##### CLASS Transform CLASS #####
- * Datentransformation für die Datenbank
+ * == TRANSFORM CLASS ==
+ * data transformation for handling in the database
  */
 class Transform {
 
 	/**
 	 * decodeDate()
-	 * formatiert Datums- und Zeitangaben aus der Datenbank
+	 * formats datetime values for database
 	 *
-	 * Parameter
-	 * - input : Eingabestring
-	 * - time  : auch Zeit ausgeben
+	 * @param input input string
+	 * @param time also return time value
 	 */
 	public static function decodeDate( $input, $time = false ) {
 		if ( $input > 0 ) {
@@ -316,11 +311,10 @@ class Transform {
 
 	/**
 	 * decodeTime()
-	 * formatiert Zeitangaben in Hundertstelsekunden aus der Datenbank im Format 00:00,00
+	 * formats time in milliseconds in 00:00,00 format
 	 *
-	 * Parameter
-	 * - input : Eingabestring
-	 * - diff  : Vorzeichen angeben
+	 * @param input input string
+	 * @param diff show signs
 	 */		
 	public static function decodeTime( $input, $diff = false ) {
 		if ( $input < 0 ) {
@@ -330,14 +324,14 @@ class Transform {
 			$vz    = '+';
 		}
 		
-		// Berechnung
+		// calculation
 		$val = floor( $input / 6000 )
 			 . ':'
 			 . str_pad( floor( ($input % 6000) / 100 ), 2, '0', STR_PAD_LEFT )
 			 . ','
 			 . str_pad( floor( $input % 100 ), 2, '0', STR_PAD_LEFT );
 		
-		// Vorzeichen anfügen
+		// add sign
 		if ( $diff === true ) {
 			$val = $vz . $val;
 		}
@@ -347,22 +341,21 @@ class Transform {
 	
 	/**
 	 * encodeTime()
-	 * formatiert Zeitangaben im Format 00:00,00 in Hundertstelsekunden für die Datenbank
+	 * formats strings in 00:00,00 format to milliseconds for usage in the database
 	 *
-	 * Parameter
-	 * - input : Eingabestring
+	 * @param input input string
 	 */			
 	public static function encodeTime( $input ) {
 		$parts = explode( ':', $input );
 		$val   = 0;
 		
 		if ( count( $parts ) > 2) {
-			// Format: 1:12:23,45
+			// format: 1:12:23,45
 			$val += ( intval($parts[0] ) * 60 * 60 * 100 );
 			$val += ( intval( $parts[1] ) * 60 * 100 );
 			$partsDec = explode( ',', $parts[2] );
 		} else {
-			// Format: 1:12,23
+			// format: 1:12,23
 			$val += ( intval( $parts[0] ) * 60 * 100 );
 			$partsDec = explode( ',', $parts[1] );
 		}
@@ -374,11 +367,10 @@ class Transform {
 	
 	/**
 	 * normalizeZeroValue()
-	 * gibt Nullwerte korrekt aus
+	 * transforms zero values correctly
 	 *
-	 * Parameter
-	 * - type  : Datentyp
-	 * - value : Wert
+	 * @param type data type
+	 * @param value value to transform
 	 */
 	public static function normalizeZeroValue( $type, $value ) {
 		

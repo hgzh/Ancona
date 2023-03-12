@@ -1,6 +1,6 @@
 <?php
 /**
- * DocumentHandler/Sidebar
+ * == DocumentHandler/Sidebar ==
  * manage sidebars in Ancona
  *
  * (C) 2023 Hgzh

@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### DocumentHandler/Menu.php #####
- * Ancona: DocumentHandler für Menüs
+ * == DocumentHandler/Menu ==
+ * handling of menus in Ancona
  *
  * (C) 2023 Hgzh
  *
@@ -13,33 +13,34 @@ use Ancona\DocumentService as Document;
 use Ancona\HtmlService\Html as Html;
 use Ancona\ExceptionService as Exception;
 
-/**
- * ##### CLASS menu CLASS #####
- * Klasse für Menüs
- */
 class Menu {
 	
-	private $context; 
+	// Ancona class context
+	private $context;
+	
+	// attached menus
 	protected $menus = [];
 	
 	/**
 	 * __construct()
-	 * Klassenkonstruktor
+	 * initializations
+	 *
+	 * @param context Ancona context
 	 */		
 	public function __construct( $context ) {
+		// set context
 		$this->context = $context;
 		
-		// Standard-Menüs erzeugen
+		// create standard menus
 		$this->createStandardMenuAccount();
 		$this->createStandardMenuConfig();
 	}
 	
 	/**
 	 * attachMenu()
-	 * ergänzt ein Menü
+	 * binds a menu object
 	 *
-	 * Parameter:
-	 * - menu: zu ergänzendes Menüobjekt
+	 * @param menu menu object to attach
 	 */	
 	public function attachMenu( Document\Menu $menu ) {
 		$this->menus[ $menu->getCode() ] = $menu;
@@ -47,28 +48,28 @@ class Menu {
 	
 	/**
 	 * getMenu()
-	 * gibt ein Menü zurück
+	 * returns a menu object
 	 *
-	 * Parameter:
-	 * - code: Menücode
+	 * @param code menu code
 	 */		
-	public function getMenu( $code ) {
+	public function getMenu( $code ) : Document\Menu {
 		if ( isset( $this->menus[ $code ] ) ) {
 			return $this->menus[ $code ];
 		} else {
 			throw new Exception\Argument(
 				__CLASS__,
 				'getMenu()',
-				'Menü mit angegebenem Code existiert nicht.'
+				'Menu with given code does not exist.'
 			);
 		}
 	}
 	
 	/**
 	 * getMenus()
-	 * gibt alle Menüs zurück
+	 * returns all menus as an array
 	 */			
-	public function getMenus() {
+	public function getMenus() : array {
+		$return = [];
 		foreach ( $this->menus as $menu ) {
 			$return[] = $menu;
 		}
@@ -77,12 +78,11 @@ class Menu {
 	
 	/**
 	 * getMenusByMenuPosition()
-	 * gibt alle Menüs zurück, die die angegebene Menüposition haben
+	 * returns all menus with given menu position
 	 *
-	 * Parameter:
-	 * - position: Menüposition
+	 * @param position menu position
 	 */			
-	public function getMenusByMenuPosition( $position ) {
+	public function getMenusByMenuPosition( $position ) : array {
 		$filter = [];
 		foreach ( $this->menus as $menu ) {
 			if ( $menu->getMenuPosition() == $position && $menu->getContent() !== false ) {
@@ -94,12 +94,11 @@ class Menu {
 
 	/**
 	 * getMenusByTogglePosition()
-	 * gibt alle Menüs zurück, die die angegebene Toggleposition haben
+	 * returns all menus with given toggle position
 	 *
-	 * Parameter:
-	 * - position: Toggleposition
+	 * @param position: toggle position
 	 */			
-	public function getMenusByTogglePosition( $position ) {
+	public function getMenusByTogglePosition( $position ) : array {
 		$filter = [];
 		foreach ( $this->menus as $menu ) {
 			if ( $menu->getTogglePosition() == $position && $menu->getContent() !== false ) {
@@ -111,10 +110,10 @@ class Menu {
 	
 	/**
 	 * createStandardMenuAccount()
-	 * Darstellung des Standard-Account-Menüs
+	 * creates the standard account menu
 	 */
 	private function createStandardMenuAccount() {
-		// Toggle
+		// toggle
 		$toggle = new Html();
 		$toggle->addToggleLink(
 			'offcanvas',
@@ -124,26 +123,26 @@ class Menu {
 			'Anmelden'
 		);
 		
-		// Menü
+		// menu
 		$menuAccount = new Document\Menu( Document\Menu::SYS_ACCOUNT );
 		$menuAccount->setTitle( 'Benutzerkonto' )
 			->setToggle( $toggle->output() )
 			->setTogglePosition( Document\Menu::TOGGLE_NAV_TOP )
 			->setMenuPosition( Document\Menu::POS_END );
 		
-		// Menü hinzufügen
+		// attach menu
 		$this->attachMenu( $menuAccount );
 	}
 
 	/**
 	 * createStandardMenuConfig()
-	 * Darstellung des Standard-Einstellungs-Menüs
+	 * creates the standard config menu
 	 */
 	private function createStandardMenuConfig() {
-		// Inhalt
+		// content
 		$content = new Html();
 		
-		// Theme-Switcher
+		// theme switcher
 		if ( count( $this->context->getThemeHandler()->getThemes() ) > 0 ) {
 			$content->addHeading( 6, 'Farbmodus', 'text-center');
 			$content->openBlock( 'div', 'list-group mt-2' );
@@ -161,7 +160,7 @@ class Menu {
 			$content->closeBlock();
 		}
 		
-		// Toggle
+		// toggle
 		$toggle = new Html();
 		$toggle->addToggleLink(
 			'offcanvas',
@@ -171,7 +170,7 @@ class Menu {
 			'Einstellungen öffnen'
 		);
 		
-		// Menü
+		// menu
 		$menuConfig = new Document\Menu( Document\Menu::SYS_CONFIG );
 		$menuConfig->setTitle( 'Einstellungen' )
 			->setContent( $content->output() )
@@ -179,22 +178,22 @@ class Menu {
 			->setTogglePosition( Document\Menu::TOGGLE_NAV_TOP )
 			->setMenuPosition( Document\Menu::POS_END );
 		
-		// Menü hinzufügen
+		// attach menu
 		$this->attachMenu( $menuConfig );		
 	}
 	
 	/**
 	 * getMenusHtml()
-	 * Menü-Html zusammenstellen und zurückgeben
+	 * returns the html of the menus
 	 */
-	public function getMenusHtml() {
-		// Anpassungen an Menüs durchführen
+	public function getMenusHtml() : string {
+		// get menu customizations
 		$this->context->getCustomMenus();
 		
-		// Html
+		// html
 		$m = new Html();
 		
-		// aside-Element als Wrapper für die Menüs
+		// aside element wrapping the menus
 		$m->addHTML( Html::elem(
 			'aside',
 			[ 'id' => 'anc-menu-container' ],
@@ -202,7 +201,7 @@ class Menu {
 			false
 		));
 		
-		// Menüs hinzufügen
+		// add menu
 		foreach ( $this->menus as $menu ) {
 			if ( $menu->getContent() !== false ) {
 				$m->addOffcanvas(
@@ -216,18 +215,17 @@ class Menu {
 		
 		$m->addHTML('</aside>');
 		
-		// ausgeben
+		// output
 		return $m->output();
 	}
 
 	/**
 	 * getMenuID()
-	 * gibt den Fragmentbezeichner für das Menü zurück (id=)
+	 * returns the id= of the menu
 	 *
-	 * Parameter
-	 * - code: Code des Menüs
+	 * @param code menu code
 	 */			
-	public static function getMenuID( $code ) {
+	public static function getMenuID( $code ) : string {
 		return 'ofc-anc-menu-' . $code;
 	}		
 	

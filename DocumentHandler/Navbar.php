@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### DocumentHandler/Navbar.php #####
- * Ancona: DocumentHandler für Navigationen
+ * == DocumentHandler/Navbar ==
+ * navbar handling in ancona
  *
  * (C) 2023 Hgzh
  *
@@ -15,33 +15,35 @@ use Ancona\DocumentService as Document;
 use Ancona\HtmlService\Html as Html;
 use Ancona\ExceptionService as Exception;
 
-/**
- * ##### CLASS Navbar CLASS #####
- * Klasse für Menüs
- */
 class Navbar {
 	
-	private $context; 
+	// Ancona context
+	private $context;
+	
+	// navbar list
 	protected $navbars = [];
 	
+	// navbar types
 	public const NAV_TOP  = 'top';
 	public const NAV_LEFT = 'left';
 	
 	/**
 	 * __construct()
-	 * Klassenkonstruktor
+	 * initializations
+	 *
+	 * @param context Ancona context
 	 */		
 	public function __construct( $context ) {
+		// set Ancona context
 		$this->context = $context;
 	}
 	
 	/**
 	 * attachNavbar()
-	 * ergänzt eine Navigationsleiste
+	 * adds a navbar
 	 *
-	 * Parameter:
-	 * - position: Ort der Navbar
-	 * - navbar:   zu ergänzendes Navbar-Objekt
+	 * @param position navbar position (one of NAV_TOP, NAV_LEFT)
+	 * @param navbar navbar object to add
 	 */	
 	public function attachNavbar( $position, Document\Navbar $navbar ) {
 		$this->navbars[ $position ] = $navbar;
@@ -49,10 +51,9 @@ class Navbar {
 	
 	/**
 	 * getNavbar()
-	 * gibt eine Navigationsleiste zurück
+	 * returns a navbar object
 	 *
-	 * Parameter:
-	 * - position: Position der Navigationsleiste
+	 * @param position navbar position
 	 */		
 	public function getNavbar( $position ) {
 		if ( isset( $this->navbars[ $position ] ) ) {
@@ -64,11 +65,10 @@ class Navbar {
 	
 	/**
 	 * getNavbarID()
-	 * gibt den Fragmentbezeichner einer Navbar zurück (id=)
+	 * gets the id= of the navbar
 	 *
-	 * Parameter:
-	 * - position: Position der Navigationsleiste
-	 * - suffix:   Suffix für Unterelemente
+	 * @param position navbar position
+	 * @param suffix suffix for children
 	 */		
 	public function getNavbarID( $position, $suffix = false ) {
 		$id = 'anc-nav-' . $position;
@@ -80,13 +80,12 @@ class Navbar {
 	
 	/**
 	 * getNavbarSubID()
-	 * gibt den Fragmentbezeichner der Subebene einer Navbar zurück (id=)
+	 * gets the id= of the sub element of the navbar
 	 *
-	 * Parameter:
-	 * - position: Position der Navigationsleiste
-	 * - nr:       Nummer der Subebene
-	 * - suffix:   Suffix für Unterelemente
-	 */		
+	 * @param position navbar position
+	 * @param nr number of sub-level
+	 * @param suffix suffix for children
+	 */
 	public function getNavbarSubID( $position, $nr, $suffix = false ) {
 		$id = 'anc-nav-' . $position . '-sub-' . $nr;
 		if ( $suffix !== false ) {
@@ -95,15 +94,22 @@ class Navbar {
 		return $id;
 	}	
 	
+	/**
+	 * buildNavbarEntries()
+	 * creates the entries in the navbar
+	 *
+	 * @param position navbar position
+	 * @param active indicates an active element
+	 */	
 	private function buildNavbarEntries( $position, $active = '' ) {			
 		
-		// Navigationsleisten-Struktur beziehen
+		// get navbar structure
 		$nav = $this->getNavbar( $position )->getStructure();
 
-		// neues HTML-Element
+		// html
 		$m = new Html();
 		
-		// Subtyp bestimmen
+		// determine subtype
 		if ( $position === Navbar::NAV_TOP ) {
 			$tgOuterClass = 'dropdown';
 			$tgElemClass  = 'nav-link dropdown-toggle';
@@ -126,11 +132,11 @@ class Navbar {
 			$stLinkClass  = 'nav-link link-dark px-2';
 		}
 
-		// Einträge anzeigen
+		// show entries
 		$i = 0;
 		foreach ( $nav as $k1 => $v1 ) {
 			if ( is_array( $v1 ) == true ) {
-				// verschachtelt, Dropdown-Menü öffnen
+				// nested, open dropdown
 				$m->openBlock( 'li', 'nav-item ' . $tgOuterClass );
 				$m->addHTML( Html::elem(
 					'a',
@@ -147,7 +153,7 @@ class Navbar {
 					$k1)
 				);
 
-				// Einträge im Dropdown-Menü
+				// dropdown entries
 				$m->openBlock(
 					'ul',
 					$tgGroupClass,
@@ -166,7 +172,7 @@ class Navbar {
 				$m->closeBlock( 2 );
 				$i++;
 			} else {
-				// einfaches Element
+				// simple element
 				$m->openBlock(
 					'li',
 					$stInnerClass
@@ -177,21 +183,25 @@ class Navbar {
 			}
 		}
 
-		// Inhalt ausgeben
+		// return content
 		return $m->output();
 	}
 	
+	/**
+	 * getNavTopHtml()
+	 * returns the outer html for the top navbar
+	 */		
 	private function getNavTopHtml() {
-		// Html
+		// html
 		$m = new Html();
 		
-		// Fixiert am oberen Bildschirmrand?
+		// fixed on top of viewport?
 		$navClass = '';
 		if ( Config\framework::get( 'nav-top-sticky' ) === true ) {
 			$navClass .= 'sticky-top';
 		}
 		
-		// Header
+		// header
 		$m->openBlock(
 			'header',
 			'navbar navbar-expand-lg anc-owncolor ' . $navClass,
@@ -202,10 +212,10 @@ class Navbar {
 			$this->getNavbarID( Navbar::NAV_TOP )
 		);
 
-		// Container und eigentliche Einträge in der Navigationsleiste
+		// container and navbar entries
 		$m->openBlock( 'nav', 'container', false, $this->getNavbarID( Navbar::NAV_TOP, 'content' ) );
 
-		// Logo
+		// logo
 		$m->openBlock( 'div', false, false, $this->getNavbarID( Navbar::NAV_TOP, 'start' ) );
 		$m->addLink(
 			Ancona::getAbs(),
@@ -217,19 +227,19 @@ class Navbar {
 		);
 		$m->closeBlock();
 
-		// Navigationsleisten-Einträge (einklappbar)
+		// collapsable navbar entries
 		$m->openBlock( 'div', 'collapse navbar-collapse', false, $this->getNavbarID( Navbar::NAV_TOP, 'entries' ) );
 		$m->openBlock( 'ul', 'navbar-nav flex-grow-1' );
 		$m->addHTML( $this->buildNavbarEntries( Navbar::NAV_TOP, '', 'dropdown' ) );
 		$m->closeBlock(2);
 		
-		// ständig sichtbare Elemente
+		// always visible navbar entries
 		$m->openBlock( 'div', 'navbar-brand', false, $this->getNavbarID( Navbar::NAV_TOP, 'end' ) );
 		
-		// Benachrichtigungs-Badge
+		// notification badge
 		$m->addHTML( $this->context->getNotificationBadge() );
 	
-		// Menü-Toggles
+		// menu toggles
 		$menuList = $this->context
 			->getMenuHandler()
 			->getMenusByTogglePosition( Document\Menu::TOGGLE_NAV_TOP );
@@ -238,7 +248,7 @@ class Navbar {
 		}
 		$m->closeBlock();
 		
-		// Aus-/Einklappschalter für mobile Ansichten
+		// toggles for mobile viewports
 		$m->openBlock( 'div', false, false, $this->getNavbarID( Navbar::NAV_TOP, 'toggle' ) );
 		$m->addHTML( Html::elem(
 			'button',
@@ -259,18 +269,22 @@ class Navbar {
 		) );
 		$m->closeBlock();
 		
-		// Nav-Container und Header schließen
+		// close nav container and header
 		$m->closeBlock(2);
 
-		// Inhalt ausgeben
+		// return content
 		return $m->output();
 	}
 	
+	/**
+	 * getNavLeftHtml()
+	 * returns the outer html for the left navbar
+	 */			
 	private function getNavLeftHtml() {
-		// Html
+		// html
 		$m = new Html();
 		
-		// Aside
+		// aside element
 		$m->openBlock(
 			'aside',
 			false,
@@ -278,7 +292,7 @@ class Navbar {
 			'anc-nav-left'
 		);
 
-		// Container und eigentliche Einträge in der Navigationsleiste
+		// container and navbar entries
 		$m->openBlock(
 			'nav',
 			'offcanvas offcanvas-lg offcanvas-start',
@@ -286,7 +300,7 @@ class Navbar {
 			$this->getNavbarID( Navbar::NAV_LEFT, 'content' )
 		);
 
-		// Titel
+		// title
 		$m->openBlock( 'div', 'offcanvas-header', false, $this->getNavbarID( Navbar::NAV_LEFT, 'start' ) );
 		$m->addHeading( 5, Config\framework::get( 'nav-left-title' ), 'offcanvas-title', $this->getNavbarID( Navbar::NAV_LEFT, 'title' ) );
 		$m->addHTML( Html::elem(
@@ -299,14 +313,14 @@ class Navbar {
 			] ) );		
 		$m->closeBlock();
 
-		// Navigationsleisten-Einträge
+		// navbar entries
 		$m->openBlock( 'nav', 'offcanvas-body pe-3', false, $this->getNavbarID( Navbar::NAV_LEFT, 'entries' ) );
 		$m->openBlock( 'ul', 'nav nav-pills flex-column' );
 		$m->addHTML( $this->buildNavbarEntries( Navbar::NAV_LEFT, '', 'collapse') );
 		$m->closeBlock(2);
 		
 		$m->openBlock( 'div', false, false, $this->getNavbarID( Navbar::NAV_LEFT, 'end' ) );
-		// Menü-Toggles
+		// menu toggles
 		$menuList = $this->context
 			->getMenuHandler()
 			->getMenusByTogglePosition( Document\Menu::TOGGLE_NAV_LEFT );
@@ -315,43 +329,46 @@ class Navbar {
 		}
 		$m->closeBlock();
 		
-		// Nav-Container und Aside schließen
+		// close nav container and aside element
 		$m->closeBlock(2);
 
-		// Inhalt ausgeben
+		// return content
 		return $m->output();
 	}	
 	
 	/**
 	 * getNavbarHtml()
-	 * Navbar-Html zusammenstellen und zurückgeben
+	 * returns the navbar html
 	 *
-	 * Parameter:
-	 * - position: Position der Navigationsleiste
+	 * @param position navbar position
 	 */
 	public function getNavbarHtml( $position ) {
 		
-		// wenn nicht definiert, nichts zurückgeben
+		// undefined, don't return anything
 		if ( !isset( $this->navbars[ $position ] ) ) {
 			return '';
 		}
 		
 		if ( $position === Navbar::NAV_TOP ) {
-			// Navigationsleiste oben
+			// top navbar
 			return $this->getNavTopHtml();
 		} else {
-			// Navigationsleiste links
+			// left navbar
 			return $this->getNavLeftHtml();
 		}
 		
 	}
 	
+	/**
+	 * getNavbarLeftToggle()
+	 * returns the toggle html for the left navbar
+	 */		
 	public function getNavbarLeftToggle() {
 		if ( $this->getNavbar( Navbar::NAV_LEFT ) === false ) {
 			return;
 		}
 		
-		// Html
+		// html
 		$m = new Html();
 		
 		$m->openRow( false, false, false, 'anc-nav-left-toggle' );
