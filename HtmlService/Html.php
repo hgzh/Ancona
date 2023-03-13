@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### html.php #####
- * Ancona: Bootstrap-Html-Framework
+ * == HtmlService/Html ==
+ * bootstrap html framework in ancona
  *
  * (C) 2015-2023 Hgzh
  *
@@ -9,21 +9,17 @@
 
 namespace Ancona\HtmlService;
 
-/**
- * ##### CLASS Html CLASS #####
- * Html-Strukturen für Bootstrap erstellen
- */
 class Html {
 
-	// Inhalt
+	// html content
 	protected $content = '';
 	
-	// Stack, für HTML-Baum
+	// stack, for html tree
 	private $stack;
 
 	/**
-	 * Klassenkonstruktor
-	 * Initialisierungen
+	 * __construct()
+	 * initializations
 	 */
 	public function __construct() {			
 		$this->stack = new \SplStack;
@@ -31,40 +27,39 @@ class Html {
 
 	/**
 	 * elem()
-	 * erzeugt ein rohes HTML-Element
+	 * creates a raw html element
 	 *
-	 * Parameter
-	 * - tag	 : HTML-Tag
-	 * - args	 : Array mit Attributen
-	 * - content : Inhalt des Tags
-	 * - close	 : Tag wieder schließen
+	 * @param tag html tag name
+	 * @param args attributes array
+	 * @param content tag content
+	 * @param close close tag
 	 */
-	public static function elem( $tag, $args = [], $content = '', $close = true ) {
-		// Lowercase
+	public static function elem( $tag, $args = [], $content = '', $close = true ) : string {
+		// lowercase
 		$tag = strtolower( $tag );
 
-		// Tag öffnen und Attribute eintragen
+		// open tag and set attributes
 		$txt = '<' . $tag;
 		foreach ( $args as $k => $v ) {
-			// leere Attribute überspringen
+			// skip empty attributes
 			if ( $v === false || $v === '' ) {
 				continue;
 			}
 
-			// Attributname
+			// attribute name
 			$txt .= ' ' . strtolower( $k );
 
-			// Attributwert, wenn nicht alleinstehend (HTML5)
+			// attribute value if not unary (HTML5)
 			if ( $v !== true ) {
 				$txt .= '="' . trim( $v ) . '"';
 			}
 		}
 		$txt .= '>';
 
-		// Inhalt
+		// content
 		$txt .= $content;
 
-		// HTML5: keine selbstschließenden Tags
+		// HTML5: no self-closing tags
 		if ( $close === true ) {
 			switch ( $tag ) {
 				case 'br' :
@@ -76,43 +71,45 @@ class Html {
 			}
 		}
 		
-		// Text zurückgeben
+		// return text
 		return $txt;
 	}
 
 	/**
 	 * openBlock()
-	 * fügt ein HTML-Element mit der Möglichkeit ein, weitere darinliegende Elemente zu definieren.
+	 * adds an element with the possibility to add more
+	 * elements inside
 	 *
-	 * Parameter
-	 * - tag   : Name des Tags
-	 * - class : Klassenangaben
-	 * - style : CSS-Style-Angaben
-	 * - id    : Selektor
-	 * - role  : Role-Angabe
+	 * @param tag html tag name
+	 * @param class additional classes
+	 * @param style CSS style definitions
+	 * @param id selector id
+	 * @param role aria role
 	 */
 	public function openBlock( $tag, $class = false, $style = false, $id = false, $role = false ) {
-		$elem = $this->elem( $tag,
-							 [ 'class' => $class,
-							   'style' => $style,
-							   'id'	   => $id,
-							   'role'  => $role
-							 ],
-							 '',
-							 false );
+		$elem = $this->elem(
+			$tag,
+			[
+				'class' => $class,
+				'style' => $style,
+				'id'	   => $id,
+				'role'  => $role
+			],
+			'',
+			false
+		);
 		$this->content .= $elem;
 
-		// auf den Stack
+		// add tag to the stack
 		$this->stack->push( $tag );
 	}
 
 	/**
 	 * closeBlock()
-	 * beendet ein mit openBlock() geöffnetes Element. Diese Funktion benutzt einen Stack, das zuletzt
-	 * geöffnete Tag wird als erstes wieder geschlossen.
+	 * closes an element opened with openBlock(). Uses a stack for closing
+	 * elements in the right order.
 	 *
-	 * Parameter
-	 * - nr : Anzahl der mit einem Aufruf zu schließenden Tags
+	 * @param nr count of elements to close (default 1)
 	 */
 	public function closeBlock( $nr = 1 ) {
 		for ( $i = 0; $i < $nr; $i++ ) {
@@ -123,43 +120,43 @@ class Html {
 
 	/**
 	 * addInline()
-	 * fügt ein HTML-Element ohne Möglichkeit weiter Definition ein.
+	 * inserts a html element without further nesting possible
 	 *
-	 * Parameter
-	 * - tag     : Name des Tags
-	 * - content : Inhalt des Tags
-	 * - class   : Klassenangaben
-	 * - style   : CSS-Style-Angaben
-	 * - id      : ID
+	 * @param tag html tag name
+	 * @param content tag content
+	 * @param class additional classes
+	 * @param style CSS style definitions
+	 * @param id selector id
 	 */		
 	public function addInline( $tag, $content = '', $class = false, $style = false, $id = false ) {
-		$this->content .= $this->elem( $tag,
-									   [ 'class' => $class,
-									     'style' => $style,
-										 'id'    => $id
-									   ],
-									   $content );
+		$this->content .= $this->elem(
+			$tag,
+			[
+				'class' => $class,
+				'style' => $style,
+				'id'    => $id
+			],
+			$content
+		);
 	}
 
 	/**
 	 * addHTML()
-	 * fügt beliebigen HTML-Code an der aktuellen Position ein
+	 * adds html code at the current position
 	 *
-	 * Parameter
-	 * - code : einzufügender Code
+	 * @param code html to add
 	 */
-	public function addHTML($code) {
+	public function addHTML( $code ) {
 		$this->content .= $code;
 	}
 
 	/**
 	 * openContainer()
-	 * öffnet einen Bootstrap-Container
+	 * opens a bootstrap container
 	 *
-	 * Parameter
-	 * - size   : Breite des Containers
-	 * - pclass : CSS-Klassen
-	 * - id     : CSS-ID
+	 * @param size container width
+	 * @param pclass additonal classes
+	 * @param id selector id
 	 */
 	public function openContainer( $size = false, $pclass = false, $id = false ) {
 		$class = 'container';
@@ -175,7 +172,7 @@ class Html {
 
 	/**
 	 * closeContainer()
-	 * schließt einen zuvor geöffneten Container
+	 * closes an already opened container
 	 */
 	public function closeContainer() {
 		$this->closeBlock();
@@ -183,11 +180,12 @@ class Html {
 
 	/**
 	 * openRow()
-	 * beginnt eine neue Bootstrap-Zeile
+	 * opens a new bootstrap row
 	 *
-	 * Parameter
-	 * - justify : Ausrichtung des Inhalts
-	 * - pclass  : CSS-Klassen
+	 * @param justify content justification
+	 * @param pclass additional classes
+	 * @param style CSS style definitions
+	 * @param id selector id
 	 */
 	public function openRow( $justify = '', $pclass = false, $style = false, $id = false ) {
 		$class = 'row';
@@ -203,7 +201,7 @@ class Html {
 
 	/**
 	 * closeRow()
-	 * schließt eine zuvor geöffnete Zeile
+	 * closes an already opened row
 	 */
 	public function closeRow() {
 		$this->closeBlock();
@@ -211,12 +209,13 @@ class Html {
 
 	/**
 	 * openCol()
-	 * öffnet eine Bootstrap-Spalte
+	 * opens a new bootstrap column
 	 *
-	 * Parameter
-	 * - device : Breakpoint-Angabe
-	 * - cols	: Breitenangabe (max. 12)
-	 * - pclass	: CSS-Klassen
+	 * @param device breakpoint value
+	 * @param cols width (max. 12)
+	 * @param pclass additional classes
+	 * @param style CSS style definitions
+	 * @param id selector id
 	 */
 	public function openCol( $device = false, $cols = 0, $pclass = false, $style = false, $id = false ) {
 		$class = 'col';
@@ -243,13 +242,12 @@ class Html {
 
 	/**
 	 * addHeading()
-	 * fügt eine Überschrift ein
+	 * inserts a new heading
 	 *
-	 * Parameter
-	 * - level : Überschriftenebene
-	 * - text  : Text der Überschrift
-	 * - class : CSS-Klasse
-	 * - id    : ID
+	 * @param level heading level
+	 * @param text heading text
+	 * @param class additional classes
+	 * @param id selector id
 	 */
 	public function addHeading( $level, $text, $class = false, $id = false ) {
 		$this->addInline( 'h' . $level, $text, $class, false, $id );
@@ -257,12 +255,11 @@ class Html {
 
 	/**
 	 * addParagraph()
-	 * fügt einen Absatz ein
+	 * inserts a new paragraph
 	 *
-	 * Parameter
-	 * - text  : Absatztext
-	 * - class : CSS-Klassen
-	 * - style : CSS-Styles
+	 * @param text paragraph text
+	 * @param class additional classes
+	 * @param style CSS style definitions
 	 */
 	public function addParagraph( $text, $class = '', $style = '' ) {
 		$this->addInline( 'p', $text, $class, $style );
@@ -270,37 +267,38 @@ class Html {
 
 	/**
 	 * addLink()
-	 * fügt einen Hyperlink (a-Element) ein
+	 * creates a hyperlink
 	 *
-	 * Parameter
-	 * - href   : URL
-	 * - text   : Linktext
-	 * - class  : CSS-Klassen
-	 * - target : Target
+	 * @param href link url
+	 * @param text link text
+	 * @param class additional classes
+	 * @param target html link target
 	 */
 	public function addLink( $href, $text, $class = false, $target = false, $id = false, $title = false ) {
-		$elem = $this->elem( 'a',
-							 [ 'href'   => $href,
-							   'class'  => $class,
-							   'target' => $target,
-							   'id'     => $id,
-							   'title'  => $title
-							 ],
-							 $text );
+		$elem = $this->elem(
+			'a',
+			[
+				'href'   => $href,
+				'class'  => $class,
+				'target' => $target,
+				'id'     => $id,
+				'title'  => $title
+			],
+			$text
+		);
 
 		$this->content .= $elem;
 	}
 	
 	/**
 	 * addModalToggleLink()
-	 * fügt einen Link ein, der ein Modal-Element öffnet
+	 * inserts a link for opening a modal
 	 *
-	 * Parameter
-	 * - modal   : ID des Modals
-	 * - icon    : Icon des Links
-	 * - text    : Linktext
-	 * - tooltip : Link-Tooltip
-	 * - class   : CSS-Klassen
+	 * @param modal modal id
+	 * @param icon link icon
+	 * @param text link text
+	 * @param tooltip link tooltip
+	 * @param class additional classes
 	 */
 	public function addModalToggleLink($modal, $icon, $text = '', $tooltip = '', $class = '') {
 		$this->addToggleLink(
@@ -320,15 +318,13 @@ class Html {
 
 	/**
 	 * addToggleLink()
-	 * fügt einen Link ein, der ein Element per Toggle öffnet
+	 * inserts a link that opens an element via toggle
 	 *
-	 * Parameter
-	 * - type    : Typ des Elements
-	 * - id      : ID des Elements
-	 * - icon    : Icon des Links
-	 * - text    : Linktext
-	 * - tooltip : Link-Tooltip
-	 * - class   : CSS-Klassen
+	 * @param type element type
+	 * @param id element id
+	 * @param text link text
+	 * @param class additional classes
+	 * @param tooltip link tooltip
 	 */
 	public function addToggleLink($type, $id, $text = '', $class = false, $tooltip = false) {
 		$elem = $this->elem(
@@ -352,11 +348,10 @@ class Html {
 	
 	/**
 	 * addList()
-	 * fügt eine HTML-Liste ein
+	 * inserts a html list
 	 *
-	 * Parameter
-	 * - type 	 : sortierte (ol) oder unsortierte (ul) Liste
-	 * - entries : Array mit den Einträgen
+	 * @param type sorted (ol) or unsorted (ul) list
+	 * @param entries list entries
 	 */
 	public function addList( $type, $entries ) {
 		$this->openBlock( $type );
@@ -368,88 +363,98 @@ class Html {
 
 	/**
 	 * addNav()
-	 * fügt ein Bootstrap-Tab-Element ein
+	 * inserts a bootstrap tab element
 	 *
-	 * Parameter
-	 * - name 	 : Name des Tab-Elements
-	 * - entries : Array mit den einzelnen Tabs
+	 * @param name name of tab element
+	 * @param entries tab entries
 	 */
 	public function addNav( $name, $entries ) {
-		// Nav-Tabs öffnen
-		$this->openBlock( 'ul', 'nav nav-tabs sticky-top bg-white pt-2', 'z-index:999;top:3.8rem;', 'tab-' . $name, 'tabs' );
+		// open nav tabs
+		$this->openBlock(
+			'ul',
+			'nav nav-tabs sticky-top bg-white pt-2',
+			'z-index:999;top:3.8rem;',
+			'tab-' . $name,
+			'tabs'
+		);
 
-		// einzelne Tabs darstellen
+		// display single tabs
 		$i = 0;
 		foreach ( $entries as $e ) {
 			if ( $i === 0 ) {
-				// aktiver Tab beim ersten Laden der Seite
+				// active tab on page load
 				$class = 'nav-link active';
 				$aria  = 'true';
 			} else {
-				// alle anderen Tabs
+				// other tabs
 				$class = 'nav-link';
 				$aria  = 'false';
 			}
-			$this->addHTML( $this->elem( 'li',
-										 [ 'class' => 'nav-item',
-										   'role'  => 'presentation'
-										 ],
-										 $this->elem( 'a',
-													  [ 'class'          => $class,
-													    'id'             => 'tab-' . $name . '-' . $e['id'],
-													    'data-bs-toggle' => 'tab',
-													    'href'           => '#tab-' . $name . '-' . $e['id'] . '-cont',
-													    'role'           => 'tab',
-													    'aria-controls'  => 'tab-' . $name . '-' . $e['id'] . '-cont',
-													    'aria-selected'  => $aria
-													  ],
-													  $e['text']
-												   )
-									   ) );
+			$this->addHTML( $this->elem(
+				'li',
+				[
+					'class' => 'nav-item',
+					'role'  => 'presentation'
+				],
+				$this->elem(
+					'a',
+					[
+						'class'          => $class,
+						'id'             => 'tab-' . $name . '-' . $e['id'],
+						'data-bs-toggle' => 'tab',
+						'href'           => '#tab-' . $name . '-' . $e['id'] . '-cont',
+						'role'           => 'tab',
+						'aria-controls'  => 'tab-' . $name . '-' . $e['id'] . '-cont',
+						'aria-selected'  => $aria
+					],
+					$e['text']
+				)
+			) );
 			$i++;
 		}
 		$this->closeBlock();
 
-		// Tab-Inhalte
+		// tab contents
 		$this->openBlock( 'div', 'tab-content', '', 'tab-' . $name . '-container' );
 
 		$i = 0;
 		foreach ( $entries as $e ) {
 			if ( $i === 0 ) {
-				// aktiver Tab beim ersten Laden der Seite
+				// active tab on page load
 				$class = 'tab-pane fade show active';
 			} else {
-				// alle anderen Tabs
+				// other tabs
 				$class = 'tab-pane fade';
 			}
-			$this->addHTML( $this->elem( 'div',
-										 [ 'class' => $class,
-										   'id'    => 'tab-' . $name . '-' . $e['id'] . '-cont',
-										   'role'  => 'tabpanel',
-										   'aria-labelledby' => 'tab-' . $name . '-' . $e['id']
-										 ],
-										 $e['content']
-										) );
+			$this->addHTML( $this->elem(
+				'div',
+				[
+					'class'           => $class,
+					'id'              => 'tab-' . $name . '-' . $e['id'] . '-cont',
+					'role'            => 'tabpanel',
+					'aria-labelledby' => 'tab-' . $name . '-' . $e['id']
+				],
+				$e['content']
+			) );
 			$i++;
 		}
 
-		// Nav schließen
+		// close nav
 		$this->closeBlock();
 	}
 	
 	/**
 	 * addAccordion()
-	 * fügt ein Bootstrap-Tab-Element ein
+	 * inserts a bootstrap accordion element
 	 *
-	 * Parameter
-	 * - name 	 : Name des Accordion-Elements
-	 * - entries : Array mit den einzelnen Elementen
+	 * @param name name of accordion element
+	 * @param entries accordion entries
 	 */
 	public function addAccordion( $name, $entries ) {
-		// Nav-Tabs öffnen
+		// accordion
 		$this->openBlock( 'div', 'accordion', '', 'acc-' . $name );
 		
-		// einzelne Elemente darstellen
+		// display entries
 		$i = 0;
 		foreach ( $entries as $e ) {
 			if ( isset( $e['html'] ) ) {
@@ -459,28 +464,33 @@ class Html {
 			
 			$this->openBlock( 'div', 'accordion-item' );
 			
-			// Header
+			// header
 			$this->openBlock( 'div', 'accordion-header', '', 'acc-' . $name . '-' . $e['id'] . '-head' );
-			$this->addHTML( $this->elem( 'button',
-										 [ 'class'          => 'accordion-button collapsed p-2',
-										   'data-bs-toggle' => 'collapse',
-										   'data-bs-target' => '#acc-' . $name . '-' . $e['id'],
-										   'aria-expanded'  => 'false',
-										   'aria-controls'  => 'acc-' . $name . '-' . $e['id']
-										 ],
-										 $e['title']
-										) );
+			$this->addHTML( $this->elem(
+				'button',
+				[
+					'class'          => 'accordion-button collapsed p-2',
+					'data-bs-toggle' => 'collapse',
+					'data-bs-target' => '#acc-' . $name . '-' . $e['id'],
+					'aria-expanded'  => 'false',
+					'aria-controls'  => 'acc-' . $name . '-' . $e['id']
+				],
+				$e['title']
+			) );
 			$this->closeBlock();
 			
-			// Inhalt
-			$this->addHTML( $this->elem( 'div',
-										 [ 'id' => 'acc-' . $name . '-' . $e['id'],
-										   'class' => 'ccordion-collapse collapse',
-										   'aria-labelledby' => 'acc-' . $name . '-' . $e['id'] . '-head',
-										   'data-bs-parent'  => '#acc-' . $name
-										 ],
-										 '',
-										 false ) );
+			// content
+			$this->addHTML( $this->elem(
+				'div',
+				[
+					'id' => 'acc-' . $name . '-' . $e['id'],
+					'class' => 'ccordion-collapse collapse',
+					'aria-labelledby' => 'acc-' . $name . '-' . $e['id'] . '-head',
+					'data-bs-parent'  => '#acc-' . $name
+				],
+				'',
+				false
+			) );
 			$this->openBlock( 'div', 'accordion-body' );
 			$this->addHTML( $e['content'] );
 			$this->closeBlock();
@@ -489,75 +499,78 @@ class Html {
 			$this->closeBlock();
 		}
 		
-		// Accordion schließen
+		// close accordion
 		$this->closeBlock();
 	}
 	
 	/**
 	 * addModal()
-	 * fügt ein Bootstrap-Dialog-Element ein
+	 * inserts a bootstrap modal
 	 *
-	 * Parameter
-	 * - name 	 : Name des Dialogs
-	 * - title	 : Titel des Dialogs
-	 * - content : Inhalt des Dialogs
-	 * - footer  : Inhalt des Fußbereichs
+	 * @param name dialog name
+	 * @param title dialog title
+	 * @param content dialog content
+	 * @param footer footer content
 	 */
 	public function addModal( $name, $title, $content, $footer = false, $class = '' ) {
-		// Modal beginnen
-		$this->addHTML( $this->elem( 'div',
-									 [ 'class'    => 'modal fade',
-									   'id'       => 'mod-' . $name,
-									   'tabindex' => '-1',
-									   'aria-labelledby' => 'mod-' . $name  . '-label',
-									   'aria-hidden'     => 'true'
-									 ],
-									 '',
-									 false ) );
+		// open modal
+		$this->addHTML( $this->elem(
+			'div',
+			[
+				'class'    => 'modal fade',
+				'id'       => 'mod-' . $name,
+				'tabindex' => '-1',
+				'aria-labelledby' => 'mod-' . $name  . '-label',
+				'aria-hidden'     => 'true'
+			],
+			'',
+			false
+		) );
 		$this->openBlock( 'div', 'modal-dialog modal-dialog-scrollable ' . $class );
 		$this->openBlock( 'div', 'modal-content' );
 		
-		// Kopfbereich
+		// header
 		$this->openBlock( 'div', 'modal-header' );
 		$this->addHeading( 5, $title, 'modal-title', 'mod-' . $name . '-label' );
-		$this->addHTML( $this->elem( 'button',
-									 [ 'type'            => 'button',
-									   'class'           => 'btn-close',
-									   'data-bs-dismiss' => 'modal',
-									   'aria-label'      => 'Schließen'
-									 ]
-									) );
+		$this->addHTML( $this->elem(
+			'button',
+			[
+				'type'            => 'button',
+				'class'           => 'btn-close',
+				'data-bs-dismiss' => 'modal',
+				'aria-label'      => 'Schließen'
+			]
+		) );
 		$this->closeBlock();
 		
-		// Inhaltsbereich
+		// content
 		$this->openBlock( 'div', 'modal-body' );
 		$this->addHTML( $content );
 		$this->closeBlock();
 		
-		// Fußbereich
+		// footer
 		if ( $footer !== false ) {
 			$this->openBlock( 'div', 'modal-footer' );
 			$this->addHTML( $footer );
 			$this->closeBlock();
 		}
 		
-		// Modal schließen
+		// close modal
 		$this->closeBlock( 2 );
 		$this->addHTML( '</div>' );
 	}
 
 	/**
 	 * addOffcanvas()
-	 * fügt ein Bootstrap-Offcanvas-Element ein
+	 * insert a bootstrap offcanvas element
 	 *
-	 * Parameter
-	 * - name 	  : Name des Offcanvas
-	 * - title	  : Titel des Offcanvas
-	 * - content  : Inhalt des Offcanvas
-	 * - position : Anzeigeposition
+	 * @param name offcanvas name
+	 * @param title	offcanvas title
+	 * @param content offcanvas content
+	 * @param position display position
 	 */	
 	public function addOffcanvas( $name, $title, $content, $position = 'end' ) {
-		// Modal beginnen
+		// open offcanvas
 		$this->addHTML( $this->elem(
 			'div',
 			[
@@ -569,7 +582,7 @@ class Html {
 			'',
 			false ) );
 		
-		// Kopfbereich
+		// header
 		$this->openBlock( 'div', 'offcanvas-header' );
 		$this->addHeading( 5, $title, 'offcanvas-title', 'ofc-' . $name . '-label' );
 		$this->addHTML( $this->elem(
@@ -582,20 +595,20 @@ class Html {
 			] ) );
 		$this->closeBlock();
 		
-		// Inhaltsbereich
+		// content
 		$this->openBlock( 'div', 'offcanvas-body' );
 		$this->addHTML( $content );
 		$this->closeBlock();
 		
-		// Offcanvas schließen
+		// close offcanvas
 		$this->addHTML( '</div>' );
 	}
 	
 	/**
 	 * output()
-	 * gibt das erzeugte HTML zurück
+	 * returns the created html
 	 */
-	public function output() {
+	public function output() : string {
 		return $this->content;
 	}
 }

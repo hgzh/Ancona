@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### form.php #####
- * Ancona: Bootstrap-Form-Framework
+ * == FormService/bsForm ==
+ * bootstrap forms in Ancona
  *
  * (C) 2021-2023 Hgzh
  *
@@ -12,35 +12,45 @@ namespace Ancona\FormService;
 use Ancona\HtmlService\Html as Html;
 use Ancona\ExceptionService as Exception;
 
-/**
- * ##### CLASS bsForm CLASS #####
- * Bootstrap-Form
- */
 class bsForm extends Html {
 	
-	// Formname
+	// form name
 	public $name = '';
 	
 	/**
-	 * Klassenkonstruktor
-	 * Initialisierungen
+	 * __construct()
+	 * initializations
+	 *
+	 * @param name form name
+	 * @param action form action
+	 * @param method http request method
+	 * @param class additional classes
 	 */
 	public function __construct( $name, $action = false, $method = false, $class = false ) {			
 		parent::__construct();
 		
 		$this->name     = $name;
-		$this->content .= $this->elem( 'form',
-									   [ 'id' => 'anc-form-' . $name,
-										 'action' => $action,
-										 'method' => $method,
-										 'class'  => $class
-									   ],
-									   '',
-									   false );
+		$this->content .= $this->elem(
+			'form',
+			[
+				'id'     => 'anc-form-' . $name,
+				'action' => $action,
+				'method' => $method,
+				'class'  => $class
+			],
+			'',
+			false
+		);
 	}
 	
+	/**
+	 * input()
+	 * create form input
+	 *
+	 * @param a form control arguments
+	 */	
 	public function input( $a ) {
-		// Parameter prüfen
+		// check params
 		$a['float']       ??= false;
 		$a['placeholder'] ??= ( isset( $a['label'] ) ? $a['label'] : '...' );
 		$a['maxlength']   ??= false;
@@ -49,87 +59,102 @@ class bsForm extends Html {
 		$a['disabled']    ??= false;
 		$a['value']       ??= false;
 		if ( !isset( $a['name'] ) ) {
-			throw new Exception\Argument( __CLASS__, 'input()', 'name= fehlt für input' );
+			throw new Exception\Argument( __CLASS__, 'input()', 'name= missing for input' );
 		}
 		if ( !isset( $a['type'] ) ) {
-			throw new Exception\Argument( __CLASS__, 'input()', 'type= fehlt für input' );
+			throw new Exception\Argument( __CLASS__, 'input()', 'type= missing for input' );
 		}
 		
-		// wenn label oder text, dann umschließendes Element
+		// if label or text set, add enclosing element
 		if ( isset( $a['label'] ) || isset( $a['text'] ) ) {
 			$enclose = true;
 		} else {
 			$enclose = false;
 		}
 		
-		// Tag-Text
+		// tag text
 		$text = '';
 		
-		// umschließendes div beginnen
+		// start enclosing div
 		if ( $enclose == true ) {
-			$text .= $this->elem( 'div',
-								  [ 'class' => ( $a['float'] == true ? 'form-floating' : '' )
-								               . ( isset( $a['class'] )
-												   ? ' ' . $a['class']
-												   : ''
-												 )
-								  ],
-								  '',
-								  false );
+			$text .= $this->elem(
+				'div',
+				[
+					'class' => ( $a['float'] == true ? 'form-floating' : '' )
+						. ( isset( $a['class'] )
+							? ' ' . $a['class']
+							: '')
+				],
+				'',
+				false
+			);
 		}
 		
-		// Label (normal)
+		// normal label
 		if ( isset( $a['label'] ) && $a['float'] == false ) {
-			$text .= $this->elem( 'label',
-								  [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-								   	'class' => 'form-label'
-								  ],
-								  $a['label'] . ':',
-								  true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-label'
+				],
+				 $a['label'] . ':',
+				true
+			);
 		}
 		
-		// Input
-		$text .= $this->elem( 'input', [ 'type'             => $a['type'],
-									     'id'               => 'anc-' . $this->name . '-' . $a['name'],
-									     'name'             => $a['name'],
-									     'class'            => 'form-control'
-									                           . ( isset( $a['size'] ) 
-																   ? ' form-control-' . $a['size']
-																   : ''
-																 ),
-									     'placeholder'      => $a['placeholder'],
-									     'maxlength'        => $a['maxlength'],
-									     'required'         => $a['required'],
-									     'readonly'         => $a['readonly'],
-									     'disabled'         => $a['disabled'],
-									     'value'            => $a['value'],
-									     'aria-describedby' => ( isset( $a['text'] ) 
-																 ? 'anc-' . $this->name . '-' . $a['name'] . '-text' 
-																 : false
-															   )
-									   ],
-							 '',
-							 false );
+		// input
+		$text .= $this->elem(
+			'input',
+			[
+				'type'             => $a['type'],
+				'id'               => 'anc-' . $this->name . '-' . $a['name'],
+				'name'             => $a['name'],
+				'class'            => 'form-control'
+					. ( isset( $a['size'] ) 
+					? ' form-control-' . $a['size']
+					: '' ),
+				'placeholder'      => $a['placeholder'],
+				'maxlength'        => $a['maxlength'],
+				'required'         => $a['required'],
+				'readonly'         => $a['readonly'],
+				'disabled'         => $a['disabled'],
+				'value'            => $a['value'],
+				'aria-describedby' => ( isset( $a['text'] ) 
+					? 'anc-' . $this->name . '-' . $a['name'] . '-text' 
+					: false )
+			],
+			'',
+			false
+		);
 		
-		// Label für form-floating
+		// label for form-floating
 		if ( isset( $a['label'] ) && $a['float'] == true ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-										     'class' => 'form-label'
-										   ],
-								  $a['label'],
-								  true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-label'
+				],
+				$a['label'],
+				true
+			);
 		}
 		
-		// Hilfetext
+		// help text
 		if ( isset( $a['text'] ) ) {
-			$text .= $this->elem( 'div', [ 'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
-										   'class' => 'form-text'
-										 ],
-								  $a['text'],
-								  true );
+			$text .= $this->elem(
+				'div',
+				[
+					'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
+					'class' => 'form-text'
+				],
+				$a['text'],
+				true
+			);
 		}
 		
-		// umschließendes div beenden
+		// end enclosing div
 		if ( $enclose == true ) {
 			$text .= '</div>';
 		}
@@ -137,8 +162,14 @@ class bsForm extends Html {
 		$this->content .= $text;
 	}
 	
-	public function textarea($a) {
-		// Parameter prüfen
+	/**
+	 * textarea()
+	 * create form textarea
+	 *
+	 * @param a form control arguments
+	 */
+	public function textarea( $a ) {
+		// check params
 		$a['height']      ??= '10em';
 		$a['float']       ??= false;
 		$a['placeholder'] ??= ( isset( $a['label'] ) ? $a['label'] : '...' );
@@ -148,80 +179,97 @@ class bsForm extends Html {
 		$a['disabled']    ??= false;
 		$a['value']       ??= false;
 		if ( !isset( $a['name'] ) ) {
-			throw new Exception\Argument( __CLASS__, 'textarea()', 'name= fehlt für textarea' );
+			throw new Exception\Argument( __CLASS__, 'textarea()', 'name= missing for textarea' );
 		}
 		
-		// wenn label oder text, dann umschließendes Element
+		// if label or text set, add enclosing element
 		if ( isset( $a['label'] ) || isset( $a['text'] ) ) {
 			$enclose = true;
 		} else {
 			$enclose = false;	
 		}
 
-		// Tag-Text
+		// tag text
 		$text = '';
 		
-		// umschließendes div beginnen
+		// start enclosing div
 		if ( $enclose == true ) {
-			$text .= $this->elem( 'div', [ 'class' => ( $a['float'] == true 
-													    ? 'form-floating'
-													    : ''
-													  )
-										              . ( isset( $a['class'] ) 
-														  ? ' ' . $a['class']
-														  : ''
-														)
-										 ],
-								  '',
-								  false );
+			$text .= $this->elem(
+				'div',
+				[
+					'class' => ( $a['float'] == true 
+						? 'form-floating'
+						: '')
+						. ( isset( $a['class'] ) 
+						? ' ' . $a['class']
+						: '')
+				],
+				'',
+				false
+			);
 		}
 		
-		// Label (normal)
+		// normal label
 		if ( isset( $a['label'] ) && $a['float'] == false) {
-			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-										     'class' => 'form-label'
-										   ],
-								  $a['label'] . ':',
-								  true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-label'
+				],
+				$a['label'] . ':',
+				true
+			);
 		}
 		
-		// Textarea
-		$text .= $this->elem( 'textarea', [ 'id'               => 'anc-' . $this->name . '-' . $a['name'],
-										    'name'             => $a['name'],
-										    'class'            => 'form-control',
-										    'style'            => 'height:' . $a['height'],
-										    'placeholder'      => $a['placeholder'],
-										    'maxlength'        => $a['maxlength'],
-										    'required'         => $a['required'],
-										    'readonly'         => $a['readonly'],
-										    'disabled'         => $a['disabled'],
-										    'aria-describedby' => ( isset( $a['text'] )
-																    ? 'anc-' . $this->name . '-' . $a['name'] . '-text'
-																    : false
-																  )
-										 ],
-							  $a['value'],
-							  true );
+		// textarea
+		$text .= $this->elem(
+			'textarea',
+			[
+				'id'               => 'anc-' . $this->name . '-' . $a['name'],
+				'name'             => $a['name'],
+				'class'            => 'form-control',
+				'style'            => 'height:' . $a['height'],
+				'placeholder'      => $a['placeholder'],
+				'maxlength'        => $a['maxlength'],
+				'required'         => $a['required'],
+				'readonly'         => $a['readonly'],
+				'disabled'         => $a['disabled'],
+				'aria-describedby' => ( isset( $a['text'] )
+					? 'anc-' . $this->name . '-' . $a['name'] . '-text'
+					: false)
+			],
+			$a['value'],
+			true
+		);
 
-		// Label für form-floating
+		// label for form-floating
 		if ( isset( $a['label'] ) && $a['float'] == true ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-										     'class' => 'form-label'
-										   ],
-								  $a['label'],
-								  true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-label'
+				],
+				$a['label'],
+				true
+			);
 		}
 		
-		// Hilfetext
+		// help text
 		if ( isset( $a['text'] ) ) {
-			$text .= $this->elem( 'div', [ 'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
-										   'class' => 'form-text'
-										 ],
-								  $a['text'],
-								  true );
+			$text .= $this->elem(
+				'div',
+				[
+					'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
+					'class' => 'form-text'
+				],
+				$a['text'],
+				true
+			);
 		}
 		
-		// umschließendes div beenden
+		// end enclosing div
 		if ( $enclose == true ) {
 			$text .= '</div>';
 		}
@@ -229,8 +277,14 @@ class bsForm extends Html {
 		$this->content .= $text;
 	}
 	
-	public function datetime($a) {
-		// Parameter prüfen
+	/**
+	 * datetime()
+	 * create form datetime
+	 *
+	 * @param a form control arguments
+	 */	
+	public function datetime( $a ) {
+		// check params
 		$a['float']       ??= false;
 		$a['placeholder'] ??= ( isset( $a['label'] ) ? $a['label'] : '...' );
 		$a['required']    ??= false;
@@ -238,84 +292,101 @@ class bsForm extends Html {
 		$a['disabled']    ??= false;
 		$a['value']       ??= false;
 		if ( !isset( $a['name'] ) ) {
-			throw new Exception\Argument( __CLASS__, 'datetime()', 'name= fehlt für datetime' );
+			throw new Exception\Argument( __CLASS__, 'datetime()', 'name= missing for datetime' );
 		}
 		if ( !isset( $a['type'] ) ) {
-			throw new Exception\Argument( __CLASS__, 'datetime()', 'type= fehlt für datetime' );
+			throw new Exception\Argument( __CLASS__, 'datetime()', 'type= missing for datetime' );
 		}
 		
-		// wenn label oder text, dann umschließendes Element
+		// if label or text set, add enclosing element
 		if ( isset($a['label'] ) || isset( $a['text'] ) ) {
 			$enclose = true;
 		} else {
 			$enclose = false;
 		}
 		
-		// Tag-Text
+		// tag text
 		$text = '';
 		
-		// umschließendes div beginnen
+		// start enclosing div
 		if ( $enclose == true ) {
-			$text .= $this->elem( 'div', [ 'class' => ( $a['float'] == true
-													    ? 'form-floating'
-													    : ''
-													  )
-										              . ( isset( $a['class'] )
-														  ? ' ' . $a['class']
-														  : ''
-														)
-										 ],
-								  '',
-								  false );
+			$text .= $this->elem(
+				'div',
+				[
+					'class' => ( $a['float'] == true
+						? 'form-floating'
+						: '' )
+						. ( isset( $a['class'] )
+						? ' ' . $a['class']
+						: '' )
+				],
+				'',
+				false
+			);
 		}
 
-		// Label (normal)
+		// normal label
 		if ( isset( $a['label'] ) && $a['float'] == false ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-										     'class' => 'form-label'
-										   ],
-								  $a['label'] . ':',
-								  true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-label'
+				],
+				$a['label'] . ':',
+				true
+			);
 		}
 		
-		// Input
-		$text .= $this->elem( 'input', [ 'type'             => 'text',
-									     'id'               => 'anc-' . $this->name . '-' . $a['name'],
-									     'name'             => $a['name'],
-									     'class'            => 'form-control datetimepicker-input anc-date-' . $a['type'],
-									     'data-target'      => '#' . 'anc-' . $this->name . '-' . $a['name'],
-									     'placeholder'      => $a['placeholder'],
-									     'required'         => $a['required'],
-									     'readonly'         => $a['readonly'],
-									     'disabled'         => $a['disabled'],
-									     'value'            => $a['value'],
-									     'aria-describedby' => ( isset( $a['text'] )
-																 ? 'anc-' . $this->name . '-' . $a['name'] . '-text'
-																 : false
-															   )
-									   ],
-							  '',
-							  false);
+		// input
+		$text .= $this->elem(
+			'input',
+			[
+				'type'             => 'text',
+				'id'               => 'anc-' . $this->name . '-' . $a['name'],
+				'name'             => $a['name'],
+				'class'            => 'form-control datetimepicker-input anc-date-' . $a['type'],
+				'data-target'      => '#' . 'anc-' . $this->name . '-' . $a['name'],
+				'placeholder'      => $a['placeholder'],
+				'required'         => $a['required'],
+				'readonly'         => $a['readonly'],
+				'disabled'         => $a['disabled'],
+				'value'            => $a['value'],
+				'aria-describedby' => ( isset( $a['text'] )
+					? 'anc-' . $this->name . '-' . $a['name'] . '-text'
+					: false )
+			],
+			'',
+			false
+		);
 
-		// Label für form-floating
+		// label for form-floating
 		if ( isset( $a['label'] ) && $a['float'] == true ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-										     'class' => 'form-label'
-										   ],
-								 $a['label'],
-								 true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-label'
+				],
+				$a['label'],
+				true
+			);
 		}
 		
-		// Hilfetext
+		// help text
 		if ( isset( $a['text'] ) ) {
-			$text .= $this->elem( 'div', [ 'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
-										   'class' => 'form-text'
-										 ],
-								 $a['text'],
-								 true );
+			$text .= $this->elem(
+				'div',
+				[
+					'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
+					'class' => 'form-text'
+				],
+				$a['text'],
+				true
+			);
 		}
 		
-		// umschließendes div beenden
+		// end enclosing div
 		if ( $enclose == true ) {
 			$text .= '</div>';
 		}
@@ -323,104 +394,130 @@ class bsForm extends Html {
 		$this->content .= $text;
 	}
 	
-	public function select($a) {
-		// Parameter prüfen
+	/**
+	 * select()
+	 * create form select
+	 *
+	 * @param a form control arguments
+	 */		
+	public function select( $a ) {
+		// check params
 		$a['float']    ??= false;
 		$a['disabled'] ??= false;
 		if ( !isset( $a['name'] ) ) {
-			throw new Exception\Argument( __CLASS__, 'select()', 'name= fehlt für select' );
+			throw new Exception\Argument( __CLASS__, 'select()', 'name= missing for select' );
 		}
 		
-		// wenn label oder text, dann umschließendes Element
+		// if label or text set, add enclosing element
 		if ( isset( $a['label'] ) || isset( $a['text'] ) ) {
 			$enclose = true;
 		} else {
 			$enclose = false;
 		}
 
-		// Tag-Text
+		// tag text
 		$text = '';		
 		
-		// umschließendes div beginnen
+		// start enclosig div
 		if ( $enclose == true ) {
-			$text .= $this->elem( 'div', [ 'class' => ( $a['float'] == true
-													    ? 'form-floating'
-													    : ''
-													  )
-										              . ( isset($a['class'] )
-														  ? ' ' . $a['class']
-														  : ''
-														)
-										 ],
-								  '',
-								  false );
+			$text .= $this->elem(
+				'div',
+				[
+					'class' => ( $a['float'] == true
+						? 'form-floating'
+						: '' )
+						. ( isset($a['class'] )
+						? ' ' . $a['class']
+						: '' )
+				],
+				'',
+				false
+			);
 		}
 		
-		// Label (normal)
+		// normal label
 		if ( isset( $a['label'] ) && $a['float'] == false ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-										     'class' => 'form-label'
-										   ],
-								  $a['label'] . ':',
-								  true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-label'
+				],
+				$a['label'] . ':',
+				true
+			);
 		}
 		
-		// Select
-		$text .= $this->elem( 'select', [ 'id'               => 'anc-' . $this->name . '-' . $a['name'],
-										  'name'             => $a['name'],
-										  'class'            => 'form-control'
-										                        . ( isset( $a['size'] )
-																    ? ' form-control-' . $a['size']
-																    : ''
-																  ),
-										  'disabled'         => $a['disabled'],
-										  'aria-describedby' => ( isset($a['text'] )
-																  ? 'anc-' . $this->name . '-' . $a['name'] . '-text'
-																  : false
-																)
-									   ],
-							  '',
-							  false );
+		// select
+		$text .= $this->elem(
+			'select',
+			[
+				'id'               => 'anc-' . $this->name . '-' . $a['name'],
+				'name'             => $a['name'],
+				'class'            => 'form-control'
+					. ( isset( $a['size'] )
+					? ' form-control-' . $a['size']
+					: '' ),
+				'disabled'         => $a['disabled'],
+				'aria-describedby' => ( isset($a['text'] )
+					? 'anc-' . $this->name . '-' . $a['name'] . '-text'
+					: false )
+			],
+			'',
+			false
+		);
 		
-		// Options
+		// options
 		if ( isset( $a['*'] ) ) {
 			foreach ( $a['*'] as $v ) {
-				// Parameter prüfen
+				// check params
 				if ( !isset( $v['selected'] ) ) {
 					$v['selected'] = false;
 				}
 				
-				// Option anlegen
-				$text .= $this->elem( 'option', [ 'value'    => $v['value'],
-												  'selected' => $v['selected']
-												],
-									  $v['text'],
-									  true );
+				// create options
+				$text .= $this->elem(
+					'option',
+					[
+						'value'    => $v['value'],
+						'selected' => $v['selected']
+					],
+					$v['text'],
+					true
+				);
 			}
 		}
 		
-		// Select schließen
+		// close select
 		$text .= '</select>';
 		
-		// Label für form-floating
+		// label for form-floating
 		if ( isset( $a['label'] ) && $a['float'] == true ) {
-			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-										     'class' => 'form-label'
-										   ],
-								 $a['label'],
-								 true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-label'
+				],
+				$a['label'],
+				true
+			);
 		}
 		
-		// Hilfetext
+		// help text
 		if ( isset( $a['text'] ) ) {
-			$text .= $this->elem( 'div', [ 'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
-										   'class' => 'form-text'
-										 ],
-								 $a['text'],
-								 true );
+			$text .= $this->elem(
+				'div',
+				[
+					'id'    => 'anc-' . $this->name . '-' . $a['name'] . '-text',
+					'class' => 'form-text'
+				],
+				$a['text'],
+				true
+			);
 		}
 		
-		// umschließendes div beenden
+		// end enclosing div
 		if ( $enclose == true ) {
 			$text .= '</div>';
 		}
@@ -428,76 +525,90 @@ class bsForm extends Html {
 		$this->content .= $text;
 	}
 	
-	public function checkbox($a) {
-		// Parameter prüfen
+	/**
+	 * checkbox()
+	 * create form checkbox
+	 *
+	 * @param a form control arguments
+	 */			
+	public function checkbox( $a ) {
+		// check params
 		$a['float']    ??= false;
 		$a['inline']   ??= false;
 		$a['disabled'] ??= false;
 		$a['checked']  ??= false;
 		$a['value']    ??= false;
 		if ( !isset( $a['name'] ) ) {
-			throw new Exception\Argument( __CLASS__, 'checkbox()', 'name= fehlt für checkbox' );
+			throw new Exception\Argument( __CLASS__, 'checkbox()', 'name= missing for checkbox' );
 		}
 		if ( !isset( $a['type'] ) ) {
-			throw new Exception\Argument( __CLASS__, 'checkbox()', 'type= fehlt für checkbox' );
+			throw new Exception\Argument( __CLASS__, 'checkbox()', 'type= missing for checkbox' );
 		}
 
-		// wenn label oder text, dann umschließendes Element
+		// if label or text set, add enclosing element
 		if ( isset( $a['label'] ) ) {
 			$enclose = true;
 		} else {
 			$enclose = false;
 		}
 
-		// Tag-Text
+		// tag text
 		$text = '';		
 		
-		// umschließendes div beginnen
+		// start enclosing div
 		if ($enclose == true) {
-			$text .= $this->elem( 'div', [ 'class' => 'form-check'
-										              . ( $a['inline'] == true
-														  ? ' form-check-inline'
-														  : ''
-														)
-										              . ( isset( $a['class'] )
-														  ? ' ' . $a['class']
-														  : ''
-														)
-										],
-								  '',
-								  false );
+			$text .= $this->elem(
+				'div',
+				[
+					'class' => 'form-check'
+						. ( $a['inline'] == true
+						? ' form-check-inline'
+						: '' )
+						. ( isset( $a['class'] )
+						? ' ' . $a['class']
+						: '' )
+				],
+				'',
+				false
+			);
 		}
 
-		// Checkbox
-		$text .= $this->elem( 'input', [ 'type'             => $a['type'],
-									     'id'               => 'anc-' . $this->name . '-' . $a['name'],
-									     'name'             => $a['name'],
-									     'class'            => 'form-check-input'
-										                       . ( isset($a['inpclass'] )
-																   ? ' ' . $a['inpclass']
-																   : ''
-																 ),
-									     'disabled'         => $a['disabled'],
-									     'checked'          => $a['checked'],
-									     'value'            => $a['value'],
-									     'aria-describedby' => ( isset($a['text'] )
-																 ? 'anc-' . $this->name . '-' . $a['name'] . '-text'
-																 : false
-															   )
-									   ],
-							  '',
-							  false );
+		// checkbox
+		$text .= $this->elem(
+			'input',
+			[
+				'type'             => $a['type'],
+				'id'               => 'anc-' . $this->name . '-' . $a['name'],
+				'name'             => $a['name'],
+				'class'            => 'form-check-input'
+					. ( isset($a['inpclass'] )
+					? ' ' . $a['inpclass']
+					: '' ),
+				'disabled'         => $a['disabled'],
+				'checked'          => $a['checked'],
+				'value'            => $a['value'],
+				'aria-describedby' => ( isset($a['text'] )
+					? 'anc-' . $this->name . '-' . $a['name'] . '-text'
+					: false )
+			],
+			'',
+			false
+		);
 		
-		// Label
+		// label
 		if ( isset($a['label'])) {
-			$text .= $this->elem( 'label', [ 'for'   => 'anc-' . $this->name . '-' . $a['name'],
-										     'class' => 'form-check-label'
-										   ],
-								  $a['label'],
-								  true );
+			$text .= $this->elem(
+				'label',
+				[
+					'for'   => 'anc-' . $this->name . '-' . $a['name'],
+					'class' => 'form-check-label'
+				],
+				$a['label'],
+				true
+			);
 		}
 		
-		// umschließendes div beenden
+		// end enclosing div
 		if ( $enclose == true ) {
 			$text .= '</div>';
 		}
@@ -505,11 +616,17 @@ class bsForm extends Html {
 		$this->content .= $text;
 	}
 	
+	/**
+	 * button()
+	 * create form button
+	 *
+	 * @param a form control arguments
+	 */			
 	public function button($a) {
-		// Tag-Text
+		// tag text
 		$text = '';		
 		
-		// Button-Group öffnen, falls nötig
+		// open button group if necessary
 		if ( isset( $a['group'] ) ) {
 			// size
 			if ( isset( $a['group']['size'] ) ) {
@@ -532,49 +649,54 @@ class bsForm extends Html {
 				$a['group']['grid'] = '';
 			}
 
-			$text .= $this->elem( 'div', [ 'class' => $a['group']['vertical']
-										              . $a['group']['size']
-										              . $a['group']['grid']
-										              . ' ' . $a['group']['class']
-										 ],
-								  '',
-								  false );
+			$text .= $this->elem(
+				'div',
+				[
+					'class' => $a['group']['vertical']
+						. $a['group']['size']
+						. $a['group']['grid']
+						. ' ' . $a['group']['class']
+				],
+				'',
+				false
+			);
 		}
 
 		foreach ( $a['*'] as $b ) {			
-			// Parameter prüfen
+			// check params
 			$b['disabled'] ??= false;
 			$b['value']    ??= false;
 			$b['name']     ??= false;
 			if ( !isset( $b['type'] ) ) {
-				throw new Exception\Argument( __CLASS__, 'button()', 'type= fehlt für button' );
+				throw new Exception\Argument( __CLASS__, 'button()', 'type= missing for button' );
 			}
 						
-			// Input einfügen
-			$text .= $this->elem( 'button', [ 'type'     => $b['type'],
-											  'id'       => 'anc-' . $this->name . '-'
-											                . ( $b['name'] == false 
-															    ? $b['type']
-															    : $b['name']
-															  ),
-											  'name'     => $b['name'],
-											  'class'    => 'btn'
-											                . ( isset( $b['color'] )
-																? ' btn-' . $b['color']
-																: ''
-															  )
-											                . ( isset( $b['class'] )
-															    ? ' ' . $b['class']
-															    : ''
-															  ),
-											  'disabled' => $b['disabled'],
-											  'value'    => $b['value']
-											],
-								  $b['text'],
-								  true );
+			// insert input
+			$text .= $this->elem(
+				'button',
+				[
+					'type'     => $b['type'],
+					'id'       => 'anc-' . $this->name . '-'
+						. ( $b['name'] == false 
+						? $b['type']
+						: $b['name'] ),
+					'name'     => $b['name'],
+					'class'    => 'btn'
+						. ( isset( $b['color'] )
+						? ' btn-' . $b['color']
+						: '' )
+						. ( isset( $b['class'] )
+						? ' ' . $b['class']
+						: '' ),
+					'disabled' => $b['disabled'],
+					'value'    => $b['value']
+				],
+				$b['text'],
+				true
+			);
 		}
 
-		// Button-Group wieder schließen
+		// close button group
 		if ( isset( $a['group'] ) ) {
 			$text .= '</div>';
 		}
@@ -582,7 +704,11 @@ class bsForm extends Html {
 		$this->content .= $text;
 	}
 	
-	public function output() {
+	/**
+	 * output()
+	 * ouput form html
+	 */			
+	public function output() : string {
 		$this->content .= '</form>';
 		
 		return $this->content;

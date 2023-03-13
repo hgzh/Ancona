@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### DocumentService/Theme #####
- * Ancona: Farbthemes
+ * == DocumentService/Theme ==
+ * color themes in Ancona
  *
  * (C) 2023 Hgzh
  *
@@ -9,22 +9,20 @@
 
 namespace Ancona\DocumentService;
 
-/**
- * ##### CLASS Theme CLASS #####
- * Klasse für Farbthemes
- */
 class Theme {
 	
+	// theme code
 	private string $code;
+	
+	// theme title
 	private string $title;
 	
 	/**
 	 * __construct()
-	 * Klassenkonstruktor
+	 * initializations
 	 *
-	 * Parameter:
-	 * - code:  Kennung des Themes
-	 * - title: Titel des Themes
+	 * @param code theme code
+	 * @param title theme title
 	 */	
 	public function __construct( $code, $title ) {
 		$this->code  = $code;
@@ -33,7 +31,7 @@ class Theme {
 	
 	/**
 	 * getCode()
-	 * gibt den Code des Themes zurück
+	 * retuns the theme code
 	 */		
 	public function getCode(): string {
 		return $this->code;
@@ -41,15 +39,18 @@ class Theme {
 
 	/**
 	 * setCode()
-	 * setzt den Code des Themes
+	 * sets the theme code
+	 *
+	 * @param code theme code
 	 */		
-	public function setCode( $code ) {
+	public function setCode( $code ) : Theme {
 		$this->code = $code;
+		return $this;
 	}	
 	
 	/**
 	 * getTitle()
-	 * gibt den Titel des Themes zurück
+	 * returns the theme title
 	 */		
 	public function getTitle(): string {
 		return $this->title;
@@ -57,10 +58,13 @@ class Theme {
 
 	/**
 	 * setTitle()
-	 * setzt den Titel des Themes
+	 * sets the theme title
+	 *
+	 * @param title theme title
 	 */		
-	public function setTitle( $title ) {
+	public function setTitle( $title ) : Theme {
 		$this->title = $title;
+		return $this;
 	}	
 	
 }

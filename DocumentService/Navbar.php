@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### DocumentService/Navbar #####
- * Ancona: Navigationsleisten
+ * == DocumentService/Navbar ==
+ * navbar elements in Ancona
  *
  * (C) 2023 Hgzh
  *
@@ -9,33 +9,31 @@
 
 namespace Ancona\DocumentService;
 
-/**
- * ##### CLASS navbar CLASS #####
- * Klasse für Navigationsleisten
- */
 class Navbar {
 	
+	// navbar entries
 	protected $nav = [];
+	
+	// divider counter
 	protected $nrDivider = 0;
 		
 	/**
 	 * addEntry()
-	 * Eintrag in der Navigationsleiste definieren
+	 * define navbar entry
 	 *
-	 * Parameter:
-	 * - label:       Beschriftung
-	 * - link:        Linkziel
+	 * @param label entry label
+	 * @prama link entry link
 	 */	
-	public function addEntry( $label, $link ) {
+	public function addEntry( $label, $link ) : Navbar {
 		$this->nav[ $label ] = $link;
 		return $this;
 	}
 	
 	/**
 	 * addDivider()
-	 * Trenner in der Navigationsleiste definieren
+	 * define navbar divider in current position
 	 */		
-	public function addDivider() {
+	public function addDivider() : Navbar {
 		if ( count( $this->nav ) > 0 ) {
 			$this->nav[ '!divider' . $this->nrDivider ] = true;
 			$this->nrDivider++;
@@ -45,13 +43,12 @@ class Navbar {
 	
 	/**
 	 * addSubnav()
-	 * Fügt ein Untermenü ein
+	 * adds a subnav level with entries
 	 *
-	 * Parameter:
-	 * - label:  Array mit Navigationselementen
-	 * - subnav: Untermenü
+	 * @param label entry label
+	 * @param subnav subnav structure
 	 */		
-	public function addSubnav( $label, $subnav ) {
+	public function addSubnav( $label, $subnav ) : Navbar {
 		$struct = $subnav->getStructure();
 		if ( count( $struct ) > 0 ) {
 			$this->nav[ $label ] = $struct;
@@ -61,9 +58,9 @@ class Navbar {
 
 	/**
 	 * getStructure()
-	 * Gibt die Menüstruktur zurück
+	 * returns the navbar entry structure
 	 */
-	public function getStructure() {
+	public function getStructure() : array {
 		return $this->nav;
 	}
 	

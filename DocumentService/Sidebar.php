@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### DocumentService/Sidebar #####
- * Ancona: Seitenbereiche
+ * == DocumentService/Sidebar ==
+ * sidebar elements in Ancona
  *
  * (C) 2023 Hgzh
  *
@@ -9,20 +9,16 @@
 
 namespace Ancona\DocumentService;
 
-/**
- * ##### CLASS Sidebar CLASS #####
- * Klasse für Seitenbereiche
- */
 class Sidebar {
 	
+	// sidebar html
 	private string $html;
 	
 	/**
 	 * __construct()
-	 * Klassenkonstruktor
+	 * initializations
 	 *
-	 * Parameter:
-	 * - html: HTML-Daten des Seitenbereichs
+	 * @param html html data
 	 */	
 	public function __construct( $html ) {
 		$this->html = $html;
@@ -30,7 +26,7 @@ class Sidebar {
 	
 	/**
 	 * getHtml()
-	 * gibt das HTML des Seitenbereichs zurück
+	 * returns the html data of the sidebar
 	 */		
 	public function getHtml(): string {
 		return $this->html;
@@ -38,12 +34,11 @@ class Sidebar {
 
 	/**
 	 * setHtml()
-	 * setzt das HTML des Seitenbereichs
+	 * sets the sidebar html
 	 *
-	 * Parameter:
-	 * - html: HTML-Daten des Seitenbereichs
+	 * @param html new html data
 	 */		
-	public function setHtml( $html ) {
+	public function setHtml( $html ) : Sidebar {
 		$this->html = $html;
 		return $this;
 	}

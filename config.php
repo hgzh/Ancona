@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### config.php #####
- * Ancona: Konfiguration
+ * == ConfigService ==
+ * Ancona configuration
  *
  * (C) 2023 Hgzh
  *
@@ -14,8 +14,8 @@ require_once( 'configFramework.php' );
 require_once( 'configInstance.php' );
 
 /**
- * ##### CLASS message CLASS #####
- * Systemnachrichten
+ * == MESSAGE CLASS ==
+ * system message
  */
 class message {
 	public static function get( $key, $fallback = null ) {
@@ -24,8 +24,8 @@ class message {
 }
 
 /**
- * ##### CLASS framework CLASS #####
- * Framework-Konfiguration
+ * == FRAMEWORK CLASS ==
+ * framework configuration
  */
 class framework {
 	public static function get( $key, $fallback = null ) {
@@ -34,8 +34,8 @@ class framework {
 }
 
 /**
- * ##### CLASS instance CLASS #####
- * eigene Instanzen-Konfiguration
+ * == INSTANCE CLASS ==
+ * instance configuration
  */
 class instance {
 	public static function get( $key, $fallback = null ) {

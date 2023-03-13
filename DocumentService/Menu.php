@@ -1,7 +1,7 @@
 <?php
 /**
- * ##### DocumentService/Menu #####
- * Ancona: Menüs
+ * == DocumentService/Menu ==
+ * menu elements in Ancona
  *
  * (C) 2023 Hgzh
  *
@@ -9,36 +9,45 @@
 
 namespace Ancona\DocumentService;
 
-/**
- * ##### CLASS menu CLASS #####
- * Klasse für Navigationsleisten
- */
 class Menu {
 	
+	// menu code
 	protected $code;
+	
+	// menu title
 	protected $title = '';
+	
+	// content html
 	protected $content = false;
+	
+	// toggle html
 	protected $toggle;
+	
+	// toggle position (one of TOGGLE_NAV_TOP / TOGGLE_NAV_LEFT)
 	protected $togglePos;
+	
+	// menu position (one of POS_*)
 	protected $menuPos;
 	
+	// system menus
 	public const SYS_CONFIG  = 'config';
 	public const SYS_ACCOUNT = 'account';
 	
+	// menu positions
 	public const POS_START  = 'start';
 	public const POS_END    = 'end';
 	public const POS_TOP    = 'top';
 	public const POS_BOTTOM = 'bottom';
 	
+	// toggle position
 	public const TOGGLE_NAV_TOP  = 'nav-top';
 	public const TOGGLE_NAV_LEFT = 'nav-left';
 	
 	/**
 	 * __construct()
-	 * Klassenkonstruktor
+	 * initializations
 	 *
-	 * Parameter:
-	 * - code: Kennung des Menüs
+	 * @param code menu code
 	 */		
 	public function __construct( $code ) {
 		$this->code = $code;
@@ -47,109 +56,104 @@ class Menu {
 	
 	/**
 	 * getCode()
-	 * gibt den Code zurück
+	 * returns the menu code
 	 */		
-	public function getCode() {
+	public function getCode() : string {
 		return $this->code;
 	}		
 	
 	/**
 	 * setTitle()
-	 * setzt den Menütitel auf den angegebenen Wert
+	 * sets the menu title to the given value
 	 *
-	 * Parameter:
-	 * - title: Titel des Menüs
+	 * @param title new menu title
 	 */		
-	public function setTitle( $title ) {
+	public function setTitle( $title ) : Menu {
 		$this->title = $title;
 		return $this;
 	}
 
 	/**
 	 * getTitle()
-	 * gibt den Menütitel zurück
+	 * returns the menu title
 	 */		
-	public function getTitle() {
+	public function getTitle() : string {
 		return $this->title;
 	}	
 	
 	/**
 	 * setContent()
-	 * setzt den Menüinhalt auf den angegebenen Wert
+	 * sets the menu content html
 	 *
-	 * Parameter:
-	 * - content: Menüinhalt
+	 * @param content new menu content
 	 */		
-	public function setContent( $content ) {
+	public function setContent( $content ) : Menu {
 		$this->content = $content;
 		return $this;
 	}	
 
 	/**
 	 * getContent()
-	 * gibt den Menüinhalt zurück
+	 * returns the menu content html
 	 */		
-	public function getContent() {
+	public function getContent() : string {
 		return $this->content;
 	}
 	
 	/**
 	 * setToggle()
-	 * setzt den Toggle auf den angegebenen Wert
+	 * sets the toggle html
 	 *
-	 * Parameter:
-	 * - toggle: Menü-Toggle
+	 * @param toggle toggle html
 	 */		
-	public function setToggle( $toggle ) {
+	public function setToggle( $toggle ) : Menu {
 		$this->toggle = $toggle;
 		return $this;
 	}
 	
 	/**
 	 * getToggle()
-	 * gibt den Toggle zurück
+	 * returns the menu toggle html
 	 */		
-	public function getToggle() {
+	public function getToggle() : string {
 		return $this->toggle;
 	}
 
 	/**
 	 * setTogglePosition()
-	 * setzt die Toggle-Position auf den angegebenen Wert
+	 * sets the menu toggle position
 	 *
-	 * Parameter:
-	 * - position: Toggle-Position
+	 * @param position toggle position
 	 */		
-	public function setTogglePosition( $position ) {
+	public function setTogglePosition( $position ) : Menu {
 		$this->togglePos = $position;
 		return $this;
 	}
 	
 	/**
 	 * getTogglePosition()
-	 * gibt die Toggle-Position zurück
+	 * returns the menu toggle position
 	 */		
-	public function getTogglePosition() {
+	public function getTogglePosition() : string {
 		return $this->togglePos;
 	}
 	
 	/**
 	 * setMenuPosition()
-	 * setzt die Menü-Position auf den angegebenen Wert
+	 * sets the menu position
 	 *
-	 * Parameter:
-	 * - position: Menü-Position
+	 * @param position menu position
 	 */		
-	public function setMenuPosition( $position ) {
+	public function setMenuPosition( $position ) : Menu {
 		$this->menuPos = $position;
 		return $this;
 	}
 	
 	/**
 	 * getMenuPosition()
-	 * gibt die Menü-Position zurück
+	 * returns the menu position
 	 */		
-	public function getMenuPosition() {
+	public function getMenuPosition() : string {
 		return $this->menuPos;
 	}
 	
