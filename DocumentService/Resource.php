@@ -9,7 +9,7 @@
 
 namespace Ancona\DocumentService;
 
-use Ancona\HtmlService\Html as Html;
+use Ancona\HtmlService as Html;
 
 class Resource {
 	
@@ -121,7 +121,7 @@ class Resource {
 	 */		
 	public function getHtml() : string {
 		if ( $this->type == Resource::TYPE_CSS ) {
-			$html = Html::elem(
+			$html = Html\Html::elem(
 				'link',
 				[
 					'rel'         => 'stylesheet',
@@ -133,7 +133,7 @@ class Resource {
 				false
 			);
 		} elseif ( $this->type == Resource::TYPE_JS ) {
-			$html = Html::elem(
+			$html = Html\Html::elem(
 				'script',
 				[
 					'src'         => $this->source,

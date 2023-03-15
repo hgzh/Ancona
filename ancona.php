@@ -16,7 +16,7 @@
 namespace Ancona;
 
 use Ancona\ConfigService as Config;
-use Ancona\HtmlService\Html as Html;
+use Ancona\HtmlService as Html;
 use Ancona\DocumentService as Document;
 use Ancona\DocumentHandler;
 
@@ -261,7 +261,7 @@ class Ancona {
 		$headHtml = '';
 
 		// utf8 encoding
-		$headHtml .= Html::elem(
+		$headHtml .= Html\Html::elem(
 			'meta',
 			[ 'charset' => 'utf-8' ],
 			'',
@@ -269,7 +269,7 @@ class Ancona {
 		);
 
 		// request compatibility mode for IE
-		$headHtml .= Html::elem(
+		$headHtml .= Html\Html::elem(
 			'meta',
 			[
 				'http-equiv' => 'X-UA-Compatible',
@@ -280,7 +280,7 @@ class Ancona {
 		);
 
 		// viewport settings
-		$headHtml .= Html::elem(
+		$headHtml .= Html\Html::elem(
 			'meta',
 			[
 				'name'    => 'viewport',
@@ -291,7 +291,7 @@ class Ancona {
 		);
 		
 		// color scheme
-		$headHtml .= Html::elem(
+		$headHtml .= Html\Html::elem(
 			'meta',
 			[
 				'name'    => 'color-scheme',
@@ -303,7 +303,7 @@ class Ancona {
 
 		// allow robots
 		if ( Config\framework::get( 'bots-allow' ) === false ) {
-			$headHtml .= Html::elem(
+			$headHtml .= Html\Html::elem(
 				'meta',
 				[
 					'name'    => 'robots',
@@ -318,7 +318,7 @@ class Ancona {
 		$headHtml .= $this->resourceHandler->getResourcesHtmlByType( Document\Resource::TYPE_CSS );
 		
 		// favicon
-		$headHtml .= Html::elem(
+		$headHtml .= Html\Html::elem(
 			'link',
 			[
 				'rel'  => 'shortcut icon',
@@ -330,7 +330,7 @@ class Ancona {
 		);
 
 		// page title
-		$headHtml .= Html::elem(
+		$headHtml .= Html\Html::elem(
 			'title',
 			[],
 			Config\framework::get( 'title' )
@@ -338,7 +338,7 @@ class Ancona {
 		);
 
 		// enclose in head element
-		$this->head .= Html::elem(
+		$this->head .= Html\Html::elem(
 			'head',
 			[ 'lang' => 'de' ],
 			$headHtml
@@ -359,7 +359,7 @@ class Ancona {
 	 * create footer area of document
 	 */
 	private function buildFooter() : string {
-		$m = new Html();
+		$m = new Html\Html();
 		
 		if ( $this->sidebarHandler->getSidebar( DocumentHandler\Sidebar::SIDEBAR_FOOTER ) !== false ) {
 			$m->openBlock(
@@ -385,7 +385,7 @@ class Ancona {
 	 * create content area of document
 	 */
 	private function buildContent() : string {
-		$m = new Html();
+		$m = new Html\Html();
 		
 		// check if left navbar exists and add a class to anc-body for css
 		$navLeft = '';
@@ -445,7 +445,7 @@ class Ancona {
 	 */
 	private function buildBody() {
 		// html
-		$m = new Html();
+		$m = new Html\Html();
 		
 		// get customizations
 		$this->getMessage();
@@ -487,9 +487,9 @@ class Ancona {
 		$this->buildFoot();
 		
 		// create html objects
-		$d = new Html(); // document
-		$h = new Html(); // <html>
-		$b = new Html(); // <body>
+		$d = new Html\Html(); // document
+		$h = new Html\Html(); // <html>
+		$b = new Html\Html(); // <body>
 		
 		// start document
 		$d->addHTML( '<!DOCTYPE html>' );
@@ -506,14 +506,14 @@ class Ancona {
 		$b->addHTML( $this->foot );
 		
 		// <body> in <html>
-		$h->addHTML( Html::elem(
+		$h->addHTML( Html\Html::elem(
 			'body',
 			[ 'role' => 'document' ],
 			$b->output()
 		));
 		
 		// <html> in document
-		$d->addHTML( Html::elem(
+		$d->addHTML( Html\Html::elem(
 			'html',
 			[ 'lang' => 'de' ],
 			$h->output()

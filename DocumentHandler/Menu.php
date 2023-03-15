@@ -10,7 +10,7 @@
 namespace Ancona\DocumentHandler;
 
 use Ancona\DocumentService as Document;
-use Ancona\HtmlService\Html as Html;
+use Ancona\HtmlService as Html;
 use Ancona\ExceptionService as Exception;
 
 class Menu {
@@ -114,7 +114,7 @@ class Menu {
 	 */
 	private function createStandardMenuAccount() {
 		// toggle
-		$toggle = new Html();
+		$toggle = new Html\Html();
 		$toggle->addToggleLink(
 			'offcanvas',
 			self::getMenuID( Document\Menu::SYS_ACCOUNT ),
@@ -140,14 +140,14 @@ class Menu {
 	 */
 	private function createStandardMenuConfig() {
 		// content
-		$content = new Html();
+		$content = new Html\Html();
 		
 		// theme switcher
 		if ( count( $this->context->getThemeHandler()->getThemes() ) > 0 ) {
 			$content->addHeading( 6, 'Farbmodus', 'text-center');
 			$content->openBlock( 'div', 'list-group mt-2' );
 			foreach ( $this->context->getThemeHandler()->getThemes() as $theme ) {
-				$content->addHTML( Html::elem( 
+				$content->addHTML( Html\Html::elem( 
 					'button',
 					[
 						'class'               => 'list-group-item list-group-item-action',
@@ -161,7 +161,7 @@ class Menu {
 		}
 		
 		// toggle
-		$toggle = new Html();
+		$toggle = new Html\Html();
 		$toggle->addToggleLink(
 			'offcanvas',
 			self::getMenuID( Document\Menu::SYS_CONFIG ),
@@ -191,10 +191,10 @@ class Menu {
 		$this->context->getCustomMenus();
 		
 		// html
-		$m = new Html();
+		$m = new Html\Html();
 		
 		// aside element wrapping the menus
-		$m->addHTML( Html::elem(
+		$m->addHTML( Html\Html::elem(
 			'aside',
 			[ 'id' => 'anc-menu-container' ],
 			'',

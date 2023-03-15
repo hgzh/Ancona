@@ -12,7 +12,7 @@ namespace Ancona\DocumentHandler;
 use Ancona\Ancona as Ancona;
 use Ancona\ConfigService as Config;
 use Ancona\DocumentService as Document;
-use Ancona\HtmlService\Html as Html;
+use Ancona\HtmlService as Html;
 use Ancona\ExceptionService as Exception;
 
 class Navbar {
@@ -107,7 +107,7 @@ class Navbar {
 		$nav = $this->getNavbar( $position )->getStructure();
 
 		// html
-		$m = new Html();
+		$m = new Html\Html();
 		
 		// determine subtype
 		if ( $position === Navbar::NAV_TOP ) {
@@ -138,7 +138,7 @@ class Navbar {
 			if ( is_array( $v1 ) == true ) {
 				// nested, open dropdown
 				$m->openBlock( 'li', 'nav-item ' . $tgOuterClass );
-				$m->addHTML( Html::elem(
+				$m->addHTML( Html\Html::elem(
 					'a',
 					[
 						'class'          => $tgElemClass,
@@ -193,7 +193,7 @@ class Navbar {
 	 */		
 	private function getNavTopHtml() {
 		// html
-		$m = new Html();
+		$m = new Html\Html();
 		
 		// fixed on top of viewport?
 		$navClass = '';
@@ -250,7 +250,7 @@ class Navbar {
 		
 		// toggles for mobile viewports
 		$m->openBlock( 'div', false, false, $this->getNavbarID( Navbar::NAV_TOP, 'toggle' ) );
-		$m->addHTML( Html::elem(
+		$m->addHTML( Html\Html::elem(
 			'button',
 			[
 				'type'           => 'button',
@@ -262,7 +262,7 @@ class Navbar {
 				'aria-expanded'  => 'false',
 				'aria-label'     => 'Menü ausklappen'
 			],
-			Html::elem(
+			Html\Html::elem(
 				'span',
 				[ 'class' => 'navbar-toggler-icon' ] 
 			)
@@ -282,7 +282,7 @@ class Navbar {
 	 */			
 	private function getNavLeftHtml() {
 		// html
-		$m = new Html();
+		$m = new Html\Html();
 		
 		// aside element
 		$m->openBlock(
@@ -303,7 +303,7 @@ class Navbar {
 		// title
 		$m->openBlock( 'div', 'offcanvas-header', false, $this->getNavbarID( Navbar::NAV_LEFT, 'start' ) );
 		$m->addHeading( 5, Config\framework::get( 'nav-left-title' ), 'offcanvas-title', $this->getNavbarID( Navbar::NAV_LEFT, 'title' ) );
-		$m->addHTML( Html::elem(
+		$m->addHTML( Html\Html::elem(
 			'button',
 			[
 				'type'            => 'button',
@@ -369,7 +369,7 @@ class Navbar {
 		}
 		
 		// html
-		$m = new Html();
+		$m = new Html\Html();
 		
 		$m->openRow( false, false, false, 'anc-nav-left-toggle' );
 		$m->openCol( false, 12, 'my-2' );

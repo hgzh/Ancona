@@ -9,7 +9,7 @@
 
 namespace Ancona\FormService;
 
-use Ancona\HtmlService\Html as Html;
+use Ancona\HtmlService as Html;
 use Ancona\ExceptionService as Exception;
 
 class bsForm extends Html {
