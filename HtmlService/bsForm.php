@@ -1,15 +1,14 @@
 <?php
 /**
- * == FormService/bsForm ==
+ * == HtmlService/bsForm ==
  * bootstrap forms in Ancona
  *
  * (C) 2021-2023 Hgzh
  *
  */
 
-namespace Ancona\FormService;
+namespace Ancona\HtmlService;
 
-use Ancona\HtmlService as Html;
 use Ancona\ExceptionService as Exception;
 
 class bsForm extends Html {
