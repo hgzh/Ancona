@@ -1,0 +1,100 @@
+/** 
+ * == (1) grid for wide viewports ==
+ *
+ * positioning of left navbar, if existing
+ * otherwise grid with only one area
+ */
+@media (min-width: 992px) {
+	#anc-body {
+		display: grid;
+		gap: 1rem;
+	}
+
+	#anc-body:not(.anc-nav-left-exists) {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			"main"
+	}
+
+	#anc-body.anc-nav-left-exists {
+		grid-template-columns: 1fr 5fr;
+		grid-template-areas:
+			"nav-left main"
+	}
+
+	#anc-content {
+		grid-area: main;
+	}
+	
+	/* sticky */	
+	#anc-nav-left {
+		grid-area: nav-left;
+		position: sticky;
+		top: 4.75rem;
+		z-index: 999;
+		height: calc(100vh - 12rem);
+		overflow-y: auto;
+	}
+	
+	/* overwrite standards of bootstrap's offcanvas */
+	#anc-nav-left-content {
+		display: block !important;
+		position: relative;
+		visibility: unset;
+		transform: unset;
+	}
+	
+	/* hide toggle for offcanvas in small viewports here */
+	#anc-nav-left-toggle {
+		display: none;
+	}
+}
+
+/** 
+ * == (2) adjustments for left navbar ==
+ *
+ * customization from bootstrap's standards
+ */
+
+/* hover for links */
+#anc-nav-left .nav-link:hover {
+	background-color: var(--bs-tertiary-bg);
+}
+
+/* mark sublevel with triangle to indicate expandibility */
+#anc-nav-left .btn-toggle::before {
+	width: 1.25em;
+	line-height: 0;
+	content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+	transition: transform .35s ease;
+	transform-origin: .5em 50%;
+	margin-right: .2rem;
+}
+
+/* expanded state */
+#anc-nav-left .btn-toggle[aria-expanded="true"]::before {
+	content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' transform='rotate%2890%29'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+}
+
+/**
+ * == (3) grid for content area ==
+ *
+ * positioning of main, message and sidebar
+ */
+#anc-content {
+	display: grid;
+	grid-template-columns: auto min-content;
+	grid-template-rows: min-content auto;
+	grid-template-areas:
+		"message message"
+		"main sidebar";
+}
+
+#anc-content-message {
+	grid-area: message;
+}
+
+#anc-content-main {
+	grid-area: main;
+}
+
