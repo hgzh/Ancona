@@ -19,15 +19,15 @@ class Transform {
 	 * @param time also return time value
 	 */
 	public static function decodeDate( $input, $time = false ) {
-		if ( $input > 0 ) {
+		if ( (int)$input === 0 ) {
+			return '';
+		} else {
 			$input = strtotime( $input );
 			if ( $time == false ) {
 				return date( 'd.m.Y', $input );
 			} else {
 				return date( 'd.m.Y H:i', $input );
 			}
-		} else {
-			return '';
 		}
 	}
 
