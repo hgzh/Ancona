@@ -111,5 +111,56 @@ class Transform {
 		return 0;
 	}
 	
+	/**
+	 * falsifyZeroValue()
+	 * returns false if zero value or the value itself if not
+	 *
+	 * @param type data type
+	 * @param value value to falsify
+	 */
+	public static function falsifyZeroValue( $type, $value ) {
+		
+		if ( !isset( $value ) || $value === false ) {
+			return false;
+		}
+		
+		if ( $type === 'number' ) {
+			return ( (int)$value === 0 ? false : $value );
+		} elseif ( $type === 'date' ) {
+			return ( $value == '0000-00-00' ? false : $value );
+		} elseif ( $type === 'datetime' ) {
+			return ( $value == '0000-00-00 00:00:00' ? false : $value );
+		}
+		
+		return 0;
+	}
+	
+	/**
+	 * validateDatetime()
+	 * checks if the given date matches the required database format, if not, returns
+	 * zero equivalent date
+	 *
+	 * @param type data type
+	 * @param value value to validate
+	 */	
+	public static function validateDatetime( $type, $date ) {
+		if ( $type === 'date' ) {
+			$format = 'Y-m-d';
+		} elseif ( $type === 'datetime' ) {
+			$format = 'Y-m-d H:i:s';			
+		}
+    	$obj = \DateTime::createFromFormat( $format, $date );
+    	if ( $obj === false || $obj->format( $format ) !== $date ) {
+			if ( $type === 'date' ) {
+				$return = '0000-00-00';
+			} elseif ( $type === 'datetime' ) {
+				$return = '0000-00-00 00:00:00';			
+			}
+		} else {
+			$return = $obj->format( $format );
+		}
+		return $return;
+	}
+	
 }
 ?>
