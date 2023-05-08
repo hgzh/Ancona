@@ -40,7 +40,7 @@ spl_autoload_register( function ( $classname ) {
 class Ancona {
 
 	// version
-	public const VERSION = '2.00.230312';
+	public const VERSION = '2.01.230508';
 	
 	// flags
 	private $flags = [];

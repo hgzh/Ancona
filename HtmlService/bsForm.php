@@ -647,6 +647,13 @@ class bsForm extends Html {
 			} else {
 				$a['group']['grid'] = '';
 			}
+			
+			// class
+			if ( isset($a['group']['class'] ) ) {
+				$a['group']['class'] = ' ' . $a['group']['class'];
+			} else {
+				$a['group']['class'] = '';
+			}
 
 			$text .= $this->elem(
 				'div',
@@ -654,7 +661,7 @@ class bsForm extends Html {
 					'class' => $a['group']['vertical']
 						. $a['group']['size']
 						. $a['group']['grid']
-						. ' ' . $a['group']['class']
+						. $a['group']['class']
 				],
 				'',
 				false
