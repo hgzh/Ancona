@@ -30,6 +30,22 @@ class Transform {
 			}
 		}
 	}
+	
+	/**
+	 * decodeDaytime()
+	 * formats daytime values for database
+	 *
+	 * @param input input string
+	 * @param time also return time value
+	 */
+	public static function decodeDaytime( $input ) {
+		if ( (int)$input === 0 ) {
+			return '';
+		} else {
+			$input = strtotime( $input );
+			return date( 'H:i', $input );
+		}
+	}	
 
 	/**
 	 * decodeTime()
@@ -106,6 +122,8 @@ class Transform {
 			return '0000-00-00';
 		} elseif ( $type === 'datetime' ) {
 			return '0000-00-00 00:00:00';
+		} elseif ( $type === 'time' ) {
+			return '00:00:00';
 		}
 		
 		return 0;
@@ -130,6 +148,8 @@ class Transform {
 			return ( $value == '0000-00-00' ? false : $value );
 		} elseif ( $type === 'datetime' ) {
 			return ( $value == '0000-00-00 00:00:00' ? false : $value );
+		} elseif ( $type === 'time' ) {
+			return ( $value == '00:00:00' ? false : $value );
 		}
 		
 		return 0;
