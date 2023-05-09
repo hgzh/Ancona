@@ -47,6 +47,16 @@ class Menu {
 	}
 	
 	/**
+	 * removeMenu()
+	 * removes a menu object
+	 *
+	 * @param code menu code
+	 */	
+	public function removeMenu( $code ) {
+		unset( $this->menus[ $code ] );
+	}	
+	
+	/**
 	 * getMenu()
 	 * returns a menu object
 	 *

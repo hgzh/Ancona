@@ -264,6 +264,30 @@ class Html {
 	public function addParagraph( $text, $class = '', $style = '' ) {
 		$this->addInline( 'p', $text, $class, $style );
 	}
+	
+	/**
+	 * addTableCell()
+	 * inserts a new table cell
+	 *
+	 * @param content cell content
+	 * @param tag cell type (th/td)
+	 * @param class additional classes
+	 * @param style CSS style definitions
+	 */
+	public function addTableCell( $content, $tag = 'td', $colspan = false, $rowspan = false, $class = false, $style = false ) {
+		$elem = $this->elem(
+			$tag,
+			[
+				'class' => $class,
+				'style' => $style,
+				'colspan' => $colspan,
+				'rowspan' => $rowspan
+			],
+			$content
+		);
+		
+		$this->content .= $elem;
+	}	
 
 	/**
 	 * addLink()

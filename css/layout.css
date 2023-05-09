@@ -96,5 +96,6 @@
 
 #anc-content-main {
 	grid-area: main;
+	min-width: 100%;
 }
 
