@@ -131,28 +131,29 @@ class Transform {
 	
 	/**
 	 * falsifyZeroValue()
-	 * returns false if zero value or the value itself if not
+	 * returns false or null if zero value or the value itself if not
 	 *
 	 * @param type data type
 	 * @param value value to falsify
+	 * @param return return value if false
 	 */
-	public static function falsifyZeroValue( $type, $value ) {
+	public static function falsifyZeroValue( $type, $value, $return = false) {
 		
 		if ( !isset( $value ) || $value === false ) {
-			return false;
+			return $return;
 		}
 		
 		if ( $type === 'number' ) {
-			return ( (int)$value === 0 ? false : $value );
+			return ( (int)$value === 0 ? $return : $value );
 		} elseif ( $type === 'date' ) {
-			return ( $value == '0000-00-00' ? false : $value );
+			return ( $value == '0000-00-00' ? $return : $value );
 		} elseif ( $type === 'datetime' ) {
-			return ( $value == '0000-00-00 00:00:00' ? false : $value );
+			return ( $value == '0000-00-00 00:00:00' ? $return : $value );
 		} elseif ( $type === 'time' ) {
-			return ( $value == '00:00:00' ? false : $value );
+			return ( $value == '00:00:00' ? $return : $value );
 		}
 		
-		return 0;
+		return $value;
 	}
 	
 	/**
