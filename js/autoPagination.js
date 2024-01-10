@@ -91,7 +91,7 @@
 		let relevantElem = '';
 		switch ( targetType ) {
 			case 'TABLE': relevantElem = 'tr'; break;
-			case 'DIV':   relevantElem = 'div'; break;
+			case 'DIV':   relevantElem = '> div'; break;
 			case 'OL':
 			case 'UL':    relevantElem = 'li'; break;
 		}

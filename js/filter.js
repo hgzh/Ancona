@@ -15,7 +15,7 @@
 		let relevantElem = '';
 		switch ( targetType ) {
 			case 'TABLE': relevantElem = 'tbody tr'; break;
-			case 'DIV':   relevantElem = 'div'; break;
+			case 'DIV':   relevantElem = '> div'; break;
 			case 'OL':
 			case 'UL':    relevantElem = 'li'; break;
 		}
