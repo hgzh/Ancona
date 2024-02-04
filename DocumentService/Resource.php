@@ -28,6 +28,9 @@ class Resource {
 	// crossorigin of the resource
 	protected $crossorigin;
 	
+	// include type of resource
+	protected $includeType;
+	
 	public const TYPE_CSS = 'css';
 	public const TYPE_JS  = 'js';
 	
@@ -116,6 +119,25 @@ class Resource {
 	}
 	
 	/**
+	 * setIncludeType()
+	 * sets the resource's include type parameters
+	 *
+	 * @param includeType include type parameters
+	 */		
+	public function setIncludeType( $includeType ) : Resource {
+		$this->includeType = $includeType;
+		return $this;
+	}	
+	
+	/**
+	 * getCrossorigin()
+	 * returns the resource's origin file
+	 */		
+	public function getIncludeType() : string {
+		return $this->includeType;
+	}	
+	
+	/**
 	 * getHtml()
 	 * returns the resource's html include representation
 	 */		
@@ -138,7 +160,8 @@ class Resource {
 				[
 					'src'         => $this->source,
 					'integrity'   => $this->integrity,
-					'crossorigin' => $this->crossorigin
+					'crossorigin' => $this->crossorigin,
+					'type'        => $this->includeType
 				]
 			);
 		}

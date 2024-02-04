@@ -629,6 +629,48 @@ class Html {
 	}
 	
 	/**
+	 * addPagination()
+	 * insert a bootstrap pagination element
+	 *
+	 * @param name pagination name
+	 * @param target target element of pagination
+	 * @param elements elements by page in target element
+	 * @param size pagination size
+	 * @param pos position
+	 */
+	public function addPagination( $name, $target, $elements = 10, $size = '', $pos = '' ) {
+		// open pagination nav
+		$this->addHTML( $this->elem(
+			'nav',
+			[
+				'class'               => 'anc-pagination',
+				'data-anc-name'       => $name,
+				'data-anc-target'     => $target,
+				'data-anc-elements'   => $elements
+			],
+			'',
+			false ) );
+		
+		// pagination list
+		$class = 'pagination';
+		if ( $size !== '' ) $class .= ' pagination-' . $size;
+		if ( $pos  !== '' ) $class .= ' justify-content-' . $pos;
+		$this->openBlock( 'ul', $class );
+		$this->addHTML( $this->elem(
+			'li',
+			[
+				'class'         => 'page-item',
+				'data-anc-page' => 1
+			],
+			'<a class="page-link" href="#">1</a>'
+		) );
+		$this->closeBlock();
+		
+		// close nav
+		$this->addHTML( '</nav>' );
+	}
+	
+	/**
 	 * output()
 	 * returns the created html
 	 */

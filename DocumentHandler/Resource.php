@@ -32,7 +32,7 @@ class Resource {
 	 * @param resource resource object
 	 * @param rank ranking of resource
 	 */	
-	public function addResource( $resource, $rank = 0 ) {
+	public function addResource( $resource, $rank = 0 ) : void {
 		$add = [
 			'object' => $resource,
 			'rank'   => $rank
@@ -50,12 +50,14 @@ class Resource {
 	 * @param integrity integrity hash
 	 * @param crossorigin crossorigin parameters
 	 * @param rank resource rank
+	 * @param includeType include type
 	 */		
-	public function createResource( $name, $type, $source, $integrity = false, $crossorigin = 'anonymous', $rank = 0 ) {
+	public function createResource( $name, $type, $source, $integrity = false, $crossorigin = 'anonymous', $rank = 0, $includeType = false ) : void {
 		$res = new Document\Resource( $name, $type );
 		$res->setSource( $source )
 			->setIntegrity( $integrity )
-			->setCrossorigin( $crossorigin );
+			->setCrossorigin( $crossorigin )
+			->setIncludeType( $includeType );
 		
 		$this->addResource( $res, $rank );
 	}
@@ -66,7 +68,7 @@ class Resource {
 	 *
 	 * @param name name of the resource
 	 */	
-	public function deleteResource( $name ) {
+	public function deleteResource( $name ) : void {
 		foreach ( $this->resources as $k => $resource ) {
 			if ( $resource[ 'object' ]->getName() == $name ) {
 				unset( $resource[ 'object' ] );
