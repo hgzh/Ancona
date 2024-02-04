@@ -184,7 +184,7 @@ class Ancona {
 	 * buildResourceLoader()
 	 * load standard and custom resources
 	 */
-	private function buildResourceLoader() {		
+	private function buildResourceLoader() {
 		// JS: ThemeToggle
 		if ( Config\framework::get( 'themes', false ) !== false ) {
 			$this->resourceHandler->createResource(
@@ -247,6 +247,13 @@ class Ancona {
 			'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js',
 			'sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+'
 		);
+
+		// JS: moduleLoader
+		$this->resourceHandler->createResource(
+			'anc-moduleloader',
+			Document\Resource::TYPE_JS,
+			Config\framework::get( 'ancona-path' ) . 'js/moduleLoader.js'
+		);				
 		
 		// get custom resources
 		$this->getCustomResourceLoad();
