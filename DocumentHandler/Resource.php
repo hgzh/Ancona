@@ -16,6 +16,9 @@ class Resource {
 	
 	protected $resources = [];
 	
+	public const REGION_HEAD = 'head';
+	public const REGION_BODY = 'body';
+	
 	/**
 	 * __construct()
 	 * initializations
@@ -30,12 +33,18 @@ class Resource {
 	 * adds a resource to the resource handler
 	 *
 	 * @param resource resource object
-	 * @param rank ranking of resource
+	 * @param rank rank of resource
+	 * @param region region of resource
 	 */	
-	public function addResource( $resource, $rank = 0 ) : void {
+	public function addResource( Document\Resource $resource, $rank = 0, $region = false ) : void {
+		if ( $region === false && $resource->getType() === Document\Resource::TYPE_JS ) {
+			$region = Resource::REGION_BODY;	
+		}
+		
 		$add = [
 			'object' => $resource,
-			'rank'   => $rank
+			'rank'   => $rank,
+			'region' => $region
 		];
 		$this->resources[] = $add;
 	}
@@ -51,15 +60,16 @@ class Resource {
 	 * @param crossorigin crossorigin parameters
 	 * @param rank resource rank
 	 * @param includeType include type
+	 * @param region resource region
 	 */		
-	public function createResource( $name, $type, $source, $integrity = false, $crossorigin = 'anonymous', $rank = 0, $includeType = false ) : void {
+	public function createResource( $name, $type, $source, $integrity = false, $crossorigin = 'anonymous', $rank = 0, $includeType = false, $region = false ) : void {
 		$res = new Document\Resource( $name, $type );
 		$res->setSource( $source )
 			->setIntegrity( $integrity )
 			->setCrossorigin( $crossorigin )
 			->setIncludeType( $includeType );
 		
-		$this->addResource( $res, $rank );
+		$this->addResource( $res, $rank, $region );
 	}
 	
 	/**
@@ -82,16 +92,17 @@ class Resource {
 	 * gets the html of the resources having the given type
 	 *
 	 * @param type type of the resource
+	 * @param region region of the resource
 	 */		
-	public function getResourcesHtmlByType( $type ) : string {
+	public function getResourcesHtmlByType( $type, $region = false ) : string {
 		$html = '';
 		
 		// sort resources array by rank
 		usort($this->resources, fn($a, $b) => $a['rank'] <=> $b['rank']);
 				
 		foreach ( $this->resources as $resource ) {
-			if ( $resource[ 'object' ]->getType() == $type ) {
-				$html .= $resource[ 'object' ]->getHtml();
+			if ( $resource['object']->getType() == $type && ( $region === false || $region === $resource['region'] ) ) {
+				$html .= $resource['object']->getHtml();
 			}
 		}
 		

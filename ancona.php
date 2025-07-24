@@ -40,7 +40,7 @@ spl_autoload_register( function ( $classname ) {
 class Ancona {
 
 	// version
-	public const VERSION = '2.03.240204';
+	public const VERSION = '2.10.000000';
 	
 	// flags
 	private $flags = [];
@@ -49,6 +49,9 @@ class Ancona {
 	private $head = '';
 	private $body = '';
 	private $foot = '';
+	
+	// body classes
+	protected $bodyClass = [];
 	
 	// handlers for specific parts of the document
 	protected $menuHandler;
@@ -190,7 +193,12 @@ class Ancona {
 			$this->resourceHandler->createResource(
 				'anc-themetoggle',
 				Document\Resource::TYPE_JS,
-				Config\framework::get( 'ancona-path' ) . 'js/themeToggle.js'
+				Config\framework::get( 'ancona-path' ) . 'js/themeToggle.js',
+				false,
+				'anonymous',
+				0,
+				false,
+				DocumentHandler\Resource::REGION_HEAD
 			);
 		}
 		
@@ -321,8 +329,9 @@ class Ancona {
 			);
 		}
 		
-		// stylesheets
+		// stylesheets and scripts for the header
 		$headHtml .= $this->resourceHandler->getResourcesHtmlByType( Document\Resource::TYPE_CSS );
+		$headHtml .= $this->resourceHandler->getResourcesHtmlByType( Document\Resource::TYPE_JS, DocumentHandler\Resource::REGION_HEAD );
 		
 		// favicon
 		$headHtml .= Html\Html::elem(
@@ -358,7 +367,7 @@ class Ancona {
 	 */
 	private function buildFoot() {
 		// scripts
-		$this->foot .= $this->resourceHandler->getResourcesHtmlByType( Document\Resource::TYPE_JS );
+		$this->foot .= $this->resourceHandler->getResourcesHtmlByType( Document\Resource::TYPE_JS, DocumentHandler\Resource::REGION_BODY );
 	}
 	
 	/**
@@ -447,6 +456,16 @@ class Ancona {
 	}
 	
 	/**
+	 * addBodyClass()
+	 * add class to body
+	 *
+	 * @param class class name
+	 */
+	public function addBodyClass( $class ) : void {
+		$this->bodyClass[] = $class;
+	}
+	
+	/**
 	 * buildBody()
 	 * create body area of document
 	 */
@@ -515,7 +534,10 @@ class Ancona {
 		// <body> in <html>
 		$h->addHTML( Html\Html::elem(
 			'body',
-			[ 'role' => 'document' ],
+			[
+				'role' => 'document',
+				'class' => implode( ' ', $this->bodyClass )
+			],
 			$b->output()
 		));
 		
