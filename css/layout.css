@@ -48,6 +48,14 @@
 	#anc-nav-left-toggle {
 		display: none;
 	}
+	
+	/* set scroll-margin-top for sticky elements */
+	html:has(.anc-prop-navbar-sticky) {
+		scroll-padding-top: 3.8rem;
+	}
+	html:has(.anc-prop-navbar-sticky .nav.sticky-top) {
+		scroll-padding-top: 7.5rem;
+	}
 }
 
 /** 

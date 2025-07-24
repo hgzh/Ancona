@@ -199,6 +199,7 @@ class Navbar {
 		$navClass = '';
 		if ( Config\framework::get( 'nav-top-sticky' ) === true ) {
 			$navClass .= 'sticky-top';
+			$this->context->addBodyClass( 'anc-prop-navbar-sticky' );
 		}
 		
 		// header
