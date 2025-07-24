@@ -376,11 +376,13 @@ class Html {
 	 *
 	 * @param type sorted (ol) or unsorted (ul) list
 	 * @param entries list entries
+	 * @param parentClass classes for list
+	 * @param childClass classes for items
 	 */
-	public function addList( $type, $entries ) {
-		$this->openBlock( $type );
+	public function addList( $type, $entries, $parentClass = false, $childClass = false ) {
+		$this->openBlock( $type, $parentClass );
 		foreach ( $entries as $e ) {
-			$this->addInline( 'li', $e );
+			$this->addInline( 'li', $e, $childClass );
 		}
 		$this->closeBlock();
 	}
@@ -396,7 +398,7 @@ class Html {
 		// open nav tabs
 		$this->openBlock(
 			'ul',
-			'nav nav-tabs sticky-top bg-white pt-2',
+			'nav nav-tabs sticky-top bg-body pt-2',
 			'z-index:999;top:3.8rem;',
 			'tab-' . $name,
 			'tabs'
@@ -669,6 +671,30 @@ class Html {
 		// close nav
 		$this->addHTML( '</nav>' );
 	}
+	
+	/**
+	 * addTooltipInline()
+	 * insert an inline element with a tooltip
+	 *
+	 * @param tag html tag name
+	 * @param content tag content
+	 * @param tooltip tooltip content
+	 * @param html tooltip contains html
+	 * @param placement tooltip placement
+	 */	
+	public function addTooltipInline( $tag, $content = '', $tooltip = false, $html = false, $placement = false ) {
+		// create tooltip
+		$this->addHTML( $this->elem(
+			$tag,
+			[
+				'data-bs-toggle'    => 'tooltip',
+				'data-bs-title'     => $tooltip,
+				'data-bs-html'      => $html,
+				'data-bs-placement' => $placement
+			],
+			$content
+		) );
+	}	
 	
 	/**
 	 * output()
